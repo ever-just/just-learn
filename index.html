@@ -658,6 +658,27 @@
             box-shadow: 0 10px 15px -3px hsla(var(--brand-primary), 0.3);
         }
 
+        .btn-secondary {
+            background: hsl(var(--secondary));
+            color: hsl(var(--secondary-foreground));
+            border-color: hsl(var(--border));
+        }
+
+        .btn-secondary:hover {
+            background: hsl(var(--secondary) / 0.8);
+            transform: translateY(-1px) scale(1.05);
+        }
+
+        .btn-destructive {
+            background: hsl(var(--destructive));
+            color: hsl(var(--destructive-foreground));
+        }
+
+        .btn-destructive:hover {
+            background: hsl(var(--destructive) / 0.8);
+            transform: translateY(-1px) scale(1.05);
+        }
+
         .btn-ghost {
             background: transparent;
             color: hsl(var(--foreground));
@@ -1043,26 +1064,26 @@
         <div class="container">
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-number counter" contenteditable="false" data-original="0" onblur="saveContent(this)" data-type="number">0</div>
-                    <div class="stat-label" contenteditable="false" data-original="Confirmed Attendees" onblur="saveContent(this)">Confirmed Attendees</div>
-                    <div class="stat-sublabel" contenteditable="false" data-original="capacity not set" onblur="saveContent(this)">capacity not set</div>
+                    <div class="stat-number counter" id="attendeeCount">0</div>
+                    <div class="stat-label">Confirmed Attendees</div>
+                    <div class="stat-sublabel" id="capacityLabel">capacity not set</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number counter" contenteditable="false" data-original="$0" onblur="saveContent(this)">$0</div>
-                    <div class="stat-label" contenteditable="false" data-original="Revenue Target" onblur="saveContent(this)">Revenue Target</div>
-                    <div class="stat-sublabel" contenteditable="false" data-original="set your pricing" onblur="saveContent(this)">set your pricing</div>
+                    <div class="stat-number counter" id="revenueAmount">$0</div>
+                    <div class="stat-label">Revenue Target</div>
+                    <div class="stat-sublabel" id="revenueLabel">set your pricing</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number counter" contenteditable="false" data-original="0" onblur="saveContent(this)" data-type="number">0</div>
-                    <div class="stat-label" contenteditable="false" data-original="Days to Event" onblur="saveContent(this)">Days to Event</div>
-                    <div class="stat-sublabel" contenteditable="false" data-original="set event date" onblur="saveContent(this)">set event date</div>
+                    <div class="stat-number counter" id="daysUntil">0</div>
+                    <div class="stat-label">Days to Event</div>
+                    <div class="stat-sublabel" id="eventDateLabel">set event date</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number counter" contenteditable="false" data-original="0/0" onblur="saveContent(this)">0/0</div>
-                    <div class="stat-label" contenteditable="false" data-original="Tasks Complete" onblur="saveContent(this)">Tasks Complete</div>
-                    <div class="stat-sublabel" contenteditable="false" data-original="get started" onblur="saveContent(this)">get started</div>
+                    <div class="stat-number counter" id="taskProgress">0/0</div>
+                    <div class="stat-label">Tasks Complete</div>
+                    <div class="stat-sublabel" id="progressLabel">get started</div>
                     <div class="progress" style="margin-top: var(--space-md);">
-                        <div class="progress-fill" style="width: 0%"></div>
+                        <div class="progress-fill" id="dashboardProgress" style="width: 0%"></div>
                     </div>
                 </div>
             </div>
@@ -1103,7 +1124,6 @@
         </div>
     </main>
 
-    <!-- Sections continue with same structure but are simplified for brevity -->
     <!-- Planning Section -->
     <section id="planning" class="section">
         <div class="container">
@@ -1132,6 +1152,10 @@
                             <label class="form-label">Venue Location</label>
                             <input type="text" id="venue" class="form-input" placeholder="Set your venue" onchange="saveData()">
                         </div>
+                        <div class="form-group">
+                            <label class="form-label">Event Price ($)</label>
+                            <input type="number" id="eventPrice" class="form-input" placeholder="50" onchange="saveData(); updateDashboard();">
+                        </div>
                     </div>
                 </div>
                 
@@ -1146,6 +1170,8 @@
                             <li><input type="checkbox" onchange="updateProgress(); saveData()"> <span contenteditable="false" data-original="Date and time finalized" onblur="saveContent(this)">Date and time finalized</span></li>
                             <li><input type="checkbox" onchange="updateProgress(); saveData()"> <span contenteditable="false" data-original="Workshop agenda completed" onblur="saveContent(this)">Workshop agenda completed</span></li>
                             <li><input type="checkbox" onchange="updateProgress(); saveData()"> <span contenteditable="false" data-original="Learning objectives defined" onblur="saveContent(this)">Learning objectives defined</span></li>
+                            <li><input type="checkbox" onchange="updateProgress(); saveData()"> <span contenteditable="false" data-original="Registration system set up" onblur="saveContent(this)">Registration system set up</span></li>
+                            <li><input type="checkbox" onchange="updateProgress(); saveData()"> <span contenteditable="false" data-original="Marketing materials prepared" onblur="saveContent(this)">Marketing materials prepared</span></li>
                         </ul>
                     </div>
                 </div>
@@ -1153,35 +1179,205 @@
         </div>
     </section>
 
-    <!-- Other sections follow similar pattern -->
+    <!-- Attendees Section -->
     <section id="attendees" class="section">
         <div class="container">
             <div class="section-header">
                 <button class="btn btn-ghost" onclick="showDashboard()">← Back to Dashboard</button>
                 <h2>👥 Attendee Management</h2>
             </div>
+
+            <div class="grid-2">
+                <div>
+                    <div class="card">
+                        <h3>Registration Overview</h3>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                            <div>
+                                <div class="stat-number" style="font-size: 1.5rem;" id="registrationCapacity">0</div>
+                                <div class="text-muted">Target Capacity</div>
+                            </div>
+                            <div>
+                                <div class="stat-number text-info" style="font-size: 1.5rem;" id="confirmedCount">0</div>
+                                <div class="text-muted">Confirmed</div>
+                            </div>
+                            <div>
+                                <div class="stat-number text-success" style="font-size: 1.5rem;" id="totalRevenue">$0</div>
+                                <div class="text-muted">Revenue</div>
+                            </div>
+                            <div>
+                                <div class="stat-number text-warning" style="font-size: 1.5rem;" id="pricePerPerson">$0</div>
+                                <div class="text-muted">Per Person</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button class="btn btn-primary" onclick="showRegistrationForm()">Add Attendee</button>
+                            <button class="btn btn-secondary" onclick="exportAttendeeList()">Export List</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="card" id="registrationCard" style="display: none;">
+                        <h3>Add New Attendee</h3>
+                        <form id="attendeeForm" onsubmit="addAttendee(event)">
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" id="attendeeName" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" id="attendeeEmail" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" id="attendeePhone" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Experience Level</label>
+                                <select id="attendeeExperience" class="form-select">
+                                    <option>None</option>
+                                    <option>Beginner</option>
+                                    <option>Intermediate</option>
+                                    <option>Advanced</option>
+                                </select>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <button type="submit" class="btn btn-primary">Add Attendee</button>
+                                <button type="button" class="btn btn-ghost" onclick="hideRegistrationForm()">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="card" id="registrationPlaceholder">
+                        <h3>Get Started</h3>
+                        <p>Configure your event details in the Planning section, then come back to manage attendees.</p>
+                        <button class="btn btn-primary" onclick="showSection('planning')">Setup Event First</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="card">
-                <h3>Registration Overview</h3>
-                <p>Configure your registration system and track attendee information here.</p>
-                <button class="btn btn-primary" onclick="alert('Registration system setup')">Setup Registration</button>
+                <h3>Attendee Directory</h3>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Experience</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendeeTable">
+                            <!-- Attendees will be added here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </section>
 
+    <!-- Budget Section -->
     <section id="budget" class="section">
         <div class="container">
             <div class="section-header">
                 <button class="btn btn-ghost" onclick="showDashboard()">← Back to Dashboard</button>
                 <h2>💰 Financial Management</h2>
             </div>
+
+            <div class="grid-2">
+                <div>
+                    <div class="card">
+                        <h3>Financial Overview</h3>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                            <div>
+                                <div class="stat-number text-info" style="font-size: 1.5rem;" id="budgetRevenue">$0</div>
+                                <div class="text-muted">Total Revenue</div>
+                            </div>
+                            <div>
+                                <div class="stat-number text-warning" style="font-size: 1.5rem;" id="budgetExpenses">$0</div>
+                                <div class="text-muted">Total Expenses</div>
+                            </div>
+                            <div>
+                                <div class="stat-number text-success" style="font-size: 1.5rem;" id="budgetProfit">$0</div>
+                                <div class="text-muted">Net Profit</div>
+                            </div>
+                            <div>
+                                <div class="stat-number" style="font-size: 1.5rem; background: var(--gradient-brand); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" id="budgetMargin">0%</div>
+                                <div class="text-muted">Margin</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="showExpenseForm()">Add Expense</button>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="card" id="expenseCard" style="display: none;">
+                        <h3>Add New Expense</h3>
+                        <form id="expenseForm" onsubmit="addExpense(event)">
+                            <div class="form-group">
+                                <label class="form-label">Expense Category</label>
+                                <select id="expenseCategory" class="form-select">
+                                    <option>Venue</option>
+                                    <option>Technology</option>
+                                    <option>Materials</option>
+                                    <option>Marketing</option>
+                                    <option>Food & Beverages</option>
+                                    <option>Personnel</option>
+                                    <option>Miscellaneous</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Description</label>
+                                <input type="text" id="expenseDescription" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Amount ($)</label>
+                                <input type="number" id="expenseAmount" class="form-input" min="0" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Vendor/Supplier</label>
+                                <input type="text" id="expenseVendor" class="form-input">
+                            </div>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <button type="submit" class="btn btn-primary">Add Expense</button>
+                                <button type="button" class="btn btn-ghost" onclick="hideExpenseForm()">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="card" id="budgetPlaceholder">
+                        <h3>Budget Overview</h3>
+                        <p>Start tracking your event expenses and revenue here. Add your first expense to get started.</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="card">
-                <h3>Budget Overview</h3>
-                <p>Track your expenses and revenue for this event.</p>
-                <button class="btn btn-primary" onclick="alert('Budget tracker setup')">Setup Budget</button>
+                <h3>Expense Tracking</h3>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Vendor</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expenseTable">
+                            <!-- Expenses will be added here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </section>
 
+    <!-- Other simplified sections -->
     <section id="content" class="section">
         <div class="container">
             <div class="section-header">
@@ -1190,8 +1386,8 @@
             </div>
             <div class="card">
                 <h3>Content Planning</h3>
-                <p>Organize your workshop materials and learning activities.</p>
-                <button class="btn btn-primary" onclick="alert('Content manager setup')">Setup Content</button>
+                <p>Organize your workshop materials and learning activities here.</p>
+                <button class="btn btn-primary" onclick="alert('Content management features coming soon!')">Manage Content</button>
             </div>
         </div>
     </section>
@@ -1204,8 +1400,8 @@
             </div>
             <div class="card">
                 <h3>Campaign Management</h3>
-                <p>Plan and track your marketing efforts.</p>
-                <button class="btn btn-primary" onclick="alert('Marketing setup')">Setup Marketing</button>
+                <p>Plan and track your marketing efforts here.</p>
+                <button class="btn btn-primary" onclick="alert('Marketing features coming soon!')">Setup Marketing</button>
             </div>
         </div>
     </section>
@@ -1218,8 +1414,8 @@
             </div>
             <div class="card">
                 <h3>Resource Planning</h3>
-                <p>Manage equipment, supplies, and logistics.</p>
-                <button class="btn btn-primary" onclick="alert('Resource manager setup')">Setup Resources</button>
+                <p>Manage equipment, supplies, and logistics here.</p>
+                <button class="btn btn-primary" onclick="alert('Resource management features coming soon!')">Manage Resources</button>
             </div>
         </div>
     </section>
@@ -1232,8 +1428,8 @@
             </div>
             <div class="card">
                 <h3>Follow-up Management</h3>
-                <p>Manage post-event communications and feedback.</p>
-                <button class="btn btn-primary" onclick="alert('Follow-up system setup')">Setup Follow-up</button>
+                <p>Manage post-event communications and feedback here.</p>
+                <button class="btn btn-primary" onclick="alert('Follow-up features coming soon!')">Setup Follow-up</button>
             </div>
         </div>
     </section>
@@ -1243,10 +1439,12 @@
         let eventData = JSON.parse(localStorage.getItem('justLearnEventData')) || {
             eventName: 'Just-Learn',
             eventDescription: 'AI Workshop Management System',
-            attendees: 0,
+            attendees: [],
+            expenses: [],
             capacity: 0,
-            revenue: 0,
+            eventPrice: 0,
             eventDate: null,
+            eventTime: null,
             venue: '',
             checklist: {},
             theme: 'dark',
@@ -1339,40 +1537,187 @@
             localStorage.setItem('justLearnEventData', JSON.stringify(eventData));
         }
 
+        // Attendee Management Functions
+        function showRegistrationForm() {
+            document.getElementById('registrationCard').style.display = 'block';
+            document.getElementById('registrationPlaceholder').style.display = 'none';
+        }
+
+        function hideRegistrationForm() {
+            document.getElementById('registrationCard').style.display = 'none';
+            document.getElementById('registrationPlaceholder').style.display = 'block';
+            document.getElementById('attendeeForm').reset();
+        }
+
+        function addAttendee(event) {
+            event.preventDefault();
+            
+            const attendee = {
+                id: Date.now(),
+                name: document.getElementById('attendeeName').value,
+                email: document.getElementById('attendeeEmail').value,
+                phone: document.getElementById('attendeePhone').value,
+                experience: document.getElementById('attendeeExperience').value,
+                status: 'Confirmed',
+                dateAdded: new Date().toISOString()
+            };
+
+            eventData.attendees.push(attendee);
+            renderAttendeeTable();
+            updateAttendeeStats();
+            updateDashboard();
+            
+            document.getElementById('attendeeForm').reset();
+            hideRegistrationForm();
+            saveData();
+        }
+
+        function removeAttendee(id) {
+            if (confirm('Are you sure you want to remove this attendee?')) {
+                eventData.attendees = eventData.attendees.filter(a => a.id !== id);
+                renderAttendeeTable();
+                updateAttendeeStats();
+                updateDashboard();
+                saveData();
+            }
+        }
+
+        function renderAttendeeTable() {
+            const tbody = document.getElementById('attendeeTable');
+            tbody.innerHTML = '';
+            
+            eventData.attendees.forEach(attendee => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${attendee.name}</td>
+                    <td>${attendee.email}</td>
+                    <td>${attendee.phone || 'N/A'}</td>
+                    <td>${attendee.experience}</td>
+                    <td><span class="text-success">${attendee.status}</span></td>
+                    <td>
+                        <button class="btn btn-destructive" onclick="removeAttendee(${attendee.id})">Remove</button>
+                    </td>
+                `;
+                row.style.animation = 'fadeIn 0.3s ease-out';
+            });
+        }
+
+        function updateAttendeeStats() {
+            const confirmedCount = eventData.attendees.length;
+            const capacity = eventData.capacity || 0;
+            const price = eventData.eventPrice || 0;
+            const totalRevenue = confirmedCount * price;
+
+            document.getElementById('confirmedCount').textContent = confirmedCount;
+            document.getElementById('registrationCapacity').textContent = capacity;
+            document.getElementById('totalRevenue').textContent = `$${totalRevenue}`;
+            document.getElementById('pricePerPerson').textContent = `$${price}`;
+        }
+
+        // Budget Management Functions  
+        function showExpenseForm() {
+            document.getElementById('expenseCard').style.display = 'block';
+            document.getElementById('budgetPlaceholder').style.display = 'none';
+        }
+
+        function hideExpenseForm() {
+            document.getElementById('expenseCard').style.display = 'none';
+            document.getElementById('budgetPlaceholder').style.display = 'block';
+            document.getElementById('expenseForm').reset();
+        }
+
+        function addExpense(event) {
+            event.preventDefault();
+            
+            const expense = {
+                id: Date.now(),
+                category: document.getElementById('expenseCategory').value,
+                description: document.getElementById('expenseDescription').value,
+                amount: parseFloat(document.getElementById('expenseAmount').value),
+                vendor: document.getElementById('expenseVendor').value,
+                dateAdded: new Date().toISOString()
+            };
+
+            eventData.expenses.push(expense);
+            renderExpenseTable();
+            updateBudgetStats();
+            updateDashboard();
+            
+            document.getElementById('expenseForm').reset();
+            hideExpenseForm();
+            saveData();
+        }
+
+        function removeExpense(id) {
+            if (confirm('Are you sure you want to remove this expense?')) {
+                eventData.expenses = eventData.expenses.filter(e => e.id !== id);
+                renderExpenseTable();
+                updateBudgetStats();
+                updateDashboard();
+                saveData();
+            }
+        }
+
+        function renderExpenseTable() {
+            const tbody = document.getElementById('expenseTable');
+            tbody.innerHTML = '';
+            
+            eventData.expenses.forEach(expense => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${expense.category}</td>
+                    <td>${expense.description}</td>
+                    <td>$${expense.amount.toFixed(2)}</td>
+                    <td>${expense.vendor || 'N/A'}</td>
+                    <td>
+                        <button class="btn btn-destructive" onclick="removeExpense(${expense.id})">Remove</button>
+                    </td>
+                `;
+                row.style.animation = 'fadeIn 0.3s ease-out';
+            });
+        }
+
+        function updateBudgetStats() {
+            const totalRevenue = (eventData.attendees?.length || 0) * (eventData.eventPrice || 0);
+            const totalExpenses = eventData.expenses.reduce((sum, expense) => sum + expense.amount, 0);
+            const netProfit = totalRevenue - totalExpenses;
+            const margin = totalRevenue > 0 ? ((netProfit / totalRevenue) * 100) : 0;
+
+            document.getElementById('budgetRevenue').textContent = `$${totalRevenue}`;
+            document.getElementById('budgetExpenses').textContent = `$${totalExpenses.toFixed(2)}`;
+            document.getElementById('budgetProfit').textContent = `$${netProfit.toFixed(2)}`;
+            document.getElementById('budgetMargin').textContent = `${margin.toFixed(1)}%`;
+        }
+
         // Real-time Dashboard Updates
         function updateDashboard() {
             // Update attendee count
-            const attendeeDisplay = document.querySelector('.stat-card:nth-child(1) .stat-number');
-            attendeeDisplay.textContent = eventData.attendees || 0;
+            const attendeeCount = eventData.attendees?.length || 0;
+            document.getElementById('attendeeCount').textContent = attendeeCount;
             
             // Update capacity
-            const capacity = document.getElementById('capacity')?.value || eventData.capacity || 0;
-            const capacityDisplay = document.querySelector('.stat-card:nth-child(1) .stat-sublabel');
-            if (capacity > 0) {
-                capacityDisplay.textContent = `${capacity} capacity`;
-                eventData.capacity = parseInt(capacity);
-            }
+            const capacity = eventData.capacity || 0;
+            document.getElementById('capacityLabel').textContent = 
+                capacity > 0 ? `${capacity} capacity` : 'capacity not set';
             
             // Update revenue
-            const revenueDisplay = document.querySelector('.stat-card:nth-child(2) .stat-number');
-            revenueDisplay.textContent = `$${eventData.revenue || 0}`;
+            const revenue = attendeeCount * (eventData.eventPrice || 0);
+            document.getElementById('revenueAmount').textContent = `$${revenue}`;
+            document.getElementById('revenueLabel').textContent = 
+                eventData.eventPrice > 0 ? `$${eventData.eventPrice} per person` : 'set your pricing';
             
             // Update days until event
-            const eventDateInput = document.getElementById('eventDateInput');
-            if (eventDateInput && eventDateInput.value) {
-                eventData.eventDate = eventDateInput.value;
-                const eventDate = new Date(eventDateInput.value);
+            if (eventData.eventDate) {
+                const eventDate = new Date(eventData.eventDate);
                 const today = new Date();
                 const timeDiff = eventDate.getTime() - today.getTime();
                 const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 
-                const daysDisplay = document.querySelector('.stat-card:nth-child(3) .stat-number');
-                const daysLabel = document.querySelector('.stat-card:nth-child(3) .stat-sublabel');
-                
-                daysDisplay.textContent = daysDiff > 0 ? daysDiff : 0;
-                daysLabel.textContent = daysDiff > 0 ? 
-                    (daysDiff === 1 ? 'tomorrow' : `in ${daysDiff} days`) : 
-                    'event date passed';
+                document.getElementById('daysUntil').textContent = daysDiff > 0 ? daysDiff : 0;
+                document.getElementById('eventDateLabel').textContent = 
+                    daysDiff > 0 ? 
+                        (daysDiff === 1 ? 'tomorrow' : `in ${daysDiff} days`) : 
+                        'event date passed';
             }
             
             saveData();
@@ -1395,13 +1740,9 @@
             });
 
             // Update dashboard
-            const taskProgress = document.querySelector('.stat-card:nth-child(4) .stat-number');
-            const taskLabel = document.querySelector('.stat-card:nth-child(4) .stat-sublabel');
-            
-            if (taskProgress) {
-                taskProgress.textContent = `${completedItems}/${totalItems}`;
-                taskLabel.textContent = totalItems > 0 ? `${Math.round(progress)}% complete` : 'get started';
-            }
+            document.getElementById('taskProgress').textContent = `${completedItems}/${totalItems}`;
+            document.getElementById('progressLabel').textContent = 
+                totalItems > 0 ? `${Math.round(progress)}% complete` : 'get started';
 
             saveData();
         }
@@ -1416,6 +1757,30 @@
             });
         }
 
+        // Utility Functions
+        function exportAttendeeList() {
+            if (eventData.attendees.length === 0) {
+                alert('No attendees to export yet.');
+                return;
+            }
+            
+            const csv = [
+                ['Name', 'Email', 'Phone', 'Experience', 'Status', 'Date Added'].join(','),
+                ...eventData.attendees.map(a => [
+                    a.name, a.email, a.phone || '', a.experience, a.status, 
+                    new Date(a.dateAdded).toLocaleDateString()
+                ].join(','))
+            ].join('\n');
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${eventData.eventName || 'event'}-attendees.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
         // Enhanced Keyboard Navigation
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
@@ -1426,6 +1791,11 @@
                     element.classList.remove('editing');
                     element.textContent = element.getAttribute('data-original') || element.textContent;
                 });
+                
+                // Hide forms
+                hideRegistrationForm();
+                hideExpenseForm();
+                
                 showDashboard();
             }
             
@@ -1466,11 +1836,31 @@
                 if (eventDateInput) eventDateInput.value = eventData.eventDate;
             }
 
+            if (eventData.eventTime) {
+                const eventTimeInput = document.getElementById('eventTime');
+                if (eventTimeInput) eventTimeInput.value = eventData.eventTime;
+            }
+
             if (eventData.capacity) {
                 const capacityInput = document.getElementById('capacity');
                 if (capacityInput) capacityInput.value = eventData.capacity;
             }
 
+            if (eventData.eventPrice) {
+                const priceInput = document.getElementById('eventPrice');
+                if (priceInput) priceInput.value = eventData.eventPrice;
+            }
+
+            if (eventData.venue) {
+                const venueInput = document.getElementById('venue');
+                if (venueInput) venueInput.value = eventData.venue;
+            }
+
+            // Render existing data
+            renderAttendeeTable();
+            renderExpenseTable();
+            updateAttendeeStats();
+            updateBudgetStats();
             updateDashboard();
             updateProgress();
             
@@ -1481,7 +1871,17 @@
         // Auto-save functionality
         document.addEventListener('input', function(e) {
             if (e.target.matches('input[type="date"], input[type="time"], input[type="number"], input[type="text"], textarea')) {
-                setTimeout(saveData, 500);
+                // Update eventData based on input id
+                if (e.target.id === 'eventDateInput') eventData.eventDate = e.target.value;
+                if (e.target.id === 'eventTime') eventData.eventTime = e.target.value;
+                if (e.target.id === 'capacity') eventData.capacity = parseInt(e.target.value) || 0;
+                if (e.target.id === 'eventPrice') eventData.eventPrice = parseFloat(e.target.value) || 0;
+                if (e.target.id === 'venue') eventData.venue = e.target.value;
+                
+                setTimeout(() => {
+                    saveData();
+                    updateDashboard();
+                }, 500);
             }
         });
 
