@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Just-Learn: AI Workshop Management | EverJust</title>
+    <link rel="icon" type="image/png" href="./assets/everjust_logo.png">
+    <style>
+        :root {
+            /* Light theme colors */
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 222.2 84% 4.9%;
+            --primary: 222.2 47.4% 11.2%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 210 40% 96%;
+            --secondary-foreground: 222.2 47.4% 11.2%;
+            --muted: 210 40% 96%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --accent: 210 40% 96%;
+            --accent-foreground: 222.2 47.4% 11.2%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 214.3 31.8% 91.4%;
+            --input: 214.3 31.8% 91.4%;
+            --ring: 222.2 47.4% 11.2%;
+            --radius: 0.5rem;
+        }
+
+        .dark {
+            /* Dark theme colors */
+            --background: 222.2 84% 4.9%;
+            --foreground: 210 40% 98%;
+            --card: 222.2 84% 4.9%;
+            --card-foreground: 210 40% 98%;
+            --popover: 222.2 84% 4.9%;
+            --popover-foreground: 210 40% 98%;
+            --primary: 210 40% 98%;
+            --primary-foreground: 222.2 47.4% 11.2%;
+            --secondary: 217.2 32.6% 17.5%;
+            --secondary-foreground: 210 40% 98%;
+            --muted: 217.2 32.6% 17.5%;
+            --muted-foreground: 215 20.2% 65.1%;
+            --accent: 217.2 32.6% 17.5%;
+            --accent-foreground: 210 40% 98%;
+            --destructive: 0 62.8% 30.6%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 217.2 32.6% 17.5%;
+            --input: 217.2 32.6% 17.5%;
+            --ring: 212.7 26.8% 83.9%;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+            line-height: 1.7;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 50;
+            padding: 0.5rem;
+            background: hsl(var(--background));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .theme-toggle:hover {
+            background: hsl(var(--accent));
+        }
+
+        /* Header */
+        .header {
+            background: hsl(var(--card));
+            border-bottom: 1px solid hsl(var(--border));
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .header h1 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            color: hsl(var(--foreground));
+        }
+
+        .header p {
+            color: hsl(var(--muted-foreground));
+            font-size: 0.875rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            padding: 1.5rem;
+        }
+
+        .stat-card {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .stat-card:hover {
+            background: hsl(var(--accent));
+        }
+
+        .stat-number {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: hsl(var(--foreground));
+        }
+
+        .stat-label {
+            color: hsl(var(--muted-foreground));
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .stat-sublabel {
+            color: hsl(var(--muted-foreground));
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Navigation Cards */
+        .navigation {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        .nav-card {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-card:hover {
+            background: hsl(var(--accent));
+            border-color: hsl(var(--ring));
+            transform: translateY(-1px);
+        }
+
+        .nav-card h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: hsl(var(--foreground));
+        }
+
+        .nav-card p {
+            color: hsl(var(--muted-foreground));
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+            padding: 1.5rem;
+            max-width: 100%;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid hsl(var(--border));
+        }
+
+        .section-header h2 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            color: hsl(var(--foreground));
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: 1px solid transparent;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            border-color: hsl(var(--primary));
+        }
+
+        .btn-primary:hover {
+            background: hsl(var(--primary) / 0.9);
+        }
+
+        .btn-secondary {
+            background: hsl(var(--secondary));
+            color: hsl(var(--secondary-foreground));
+            border-color: hsl(var(--border));
+        }
+
+        .btn-secondary:hover {
+            background: hsl(var(--secondary) / 0.8);
+        }
+
+        .btn-destructive {
+            background: hsl(var(--destructive));
+            color: hsl(var(--destructive-foreground));
+        }
+
+        .btn-destructive:hover {
+            background: hsl(var(--destructive) / 0.9);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: hsl(var(--foreground));
+        }
+
+        .btn-ghost:hover {
+            background: hsl(var(--accent));
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: hsl(var(--foreground));
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: hsl(var(--ring));
+            box-shadow: 0 0 0 2px hsl(var(--ring) / 0.2);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Cards */
+        .card {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h3,
+        .card h4 {
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: hsl(var(--card-foreground));
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+        }
+
+        .card h4 {
+            font-size: 1.125rem;
+        }
+
+        /* Tables */
+        .table-container {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid hsl(var(--border));
+            font-size: 0.875rem;
+        }
+
+        .table th {
+            background: hsl(var(--muted));
+            font-weight: 600;
+            color: hsl(var(--muted-foreground));
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            font-size: 0.75rem;
+        }
+
+        .table tbody tr:hover {
+            background: hsl(var(--muted) / 0.5);
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid hsl(var(--border));
+            font-size: 0.875rem;
+        }
+
+        .checklist li:last-child {
+            border-bottom: none;
+        }
+
+        .checklist input[type="checkbox"] {
+            width: 1rem;
+            height: 1rem;
+            accent-color: hsl(var(--primary));
+        }
+
+        /* Progress Bar */
+        .progress {
+            background: hsl(var(--secondary));
+            border-radius: var(--radius);
+            height: 0.5rem;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            background: hsl(var(--primary));
+            height: 100%;
+            border-radius: var(--radius);
+            transition: width 0.3s ease;
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        /* Utility Classes */
+        .text-success { color: #22c55e; }
+        .text-warning { color: #f59e0b; }
+        .text-destructive { color: hsl(var(--destructive)); }
+        .text-muted { color: hsl(var(--muted-foreground)); }
+
+        /* Dashboard */
+        .dashboard {
+            display: block;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 1rem;
+            }
+            
+            .navigation {
+                grid-template-columns: 1fr;
+                padding: 0 1rem 1rem;
+            }
+            
+            .grid-2,
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .section {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .stat-number {
+                font-size: 1.875rem;
+            }
+        }
+
+        /* Loading States */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: .5;
+            }
+        }
+
+        /* Focus Styles */
+        .nav-card:focus-visible,
+        .btn:focus-visible {
+            outline: 2px solid hsl(var(--ring));
+            outline-offset: 2px;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: hsl(var(--muted));
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: hsl(var(--muted-foreground) / 0.5);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: hsl(var(--muted-foreground) / 0.7);
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sun-icon">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/>
+        </svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="moon-icon" style="display: none;">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+    </button>
+
+    <header class="header">
+        <img src="./assets/everjust_logo.png" alt="EverJust Logo" class="logo" onerror="this.style.display='none'">
+        <div>
+            <h1>Just-Learn</h1>
+            <p>AI Workshop Management System</p>
+        </div>
+    </header>
+
+    <main id="dashboard" class="dashboard">
+        <!-- Stats Dashboard -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="attendeeCount">24</div>
+                <div class="stat-label">Confirmed Attendees</div>
+                <div class="stat-sublabel">30 capacity</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="budgetStatus">$350</div>
+                <div class="stat-label">Net Profit</div>
+                <div class="stat-sublabel">29% margin</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="daysUntil">3</div>
+                <div class="stat-label">Days Until Event</div>
+                <div class="stat-sublabel" id="eventDate">This Weekend</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="taskProgress">18/25</div>
+                <div class="stat-label">Tasks Complete</div>
+                <div class="stat-sublabel">72% done</div>
+            </div>
+        </div>
+
+        <!-- Navigation Cards -->
+        <div class="navigation">
+            <div class="nav-card" onclick="showSection('planning')" tabindex="0" role="button" aria-label="Open Event Planning">
+                <h3>📋 Event Planning</h3>
+                <p>Comprehensive checklist, agenda templates, and timeline management for seamless event execution</p>
+            </div>
+            <div class="nav-card" onclick="showSection('attendees')" tabindex="0" role="button" aria-label="Open Attendee Management">
+                <h3>👥 Attendee Management</h3>
+                <p>Registration tracking, communication workflows, and participant engagement tools</p>
+            </div>
+            <div class="nav-card" onclick="showSection('budget')" tabindex="0" role="button" aria-label="Open Budget Tracker">
+                <h3>💰 Budget Tracker</h3>
+                <p>Financial planning, expense monitoring, and revenue optimization with real-time insights</p>
+            </div>
+            <div class="nav-card" onclick="showSection('content')" tabindex="0" role="button" aria-label="Open Workshop Content">
+                <h3>📚 Workshop Content</h3>
+                <p>Learning objectives, interactive activities, and educational material organization</p>
+            </div>
+            <div class="nav-card" onclick="showSection('marketing')" tabindex="0" role="button" aria-label="Open Marketing Campaign">
+                <h3>📢 Marketing Campaign</h3>
+                <p>Multi-channel promotion strategies, performance analytics, and outreach optimization</p>
+            </div>
+            <div class="nav-card" onclick="showSection('resources')" tabindex="0" role="button" aria-label="Open Resources & Materials">
+                <h3>🎯 Resources & Materials</h3>
+                <p>Equipment management, supply logistics, and comprehensive setup coordination</p>
+            </div>
+            <div class="nav-card" onclick="showSection('followup')" tabindex="0" role="button" aria-label="Open Follow-up System">
+                <h3>📧 Follow-up System</h3>
+                <p>Post-event engagement, feedback collection, and community building initiatives</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Planning Section -->
+    <section id="planning" class="section">
+        <div class="section-header">
+            <button class="btn btn-ghost" onclick="showDashboard()">← Back to Dashboard</button>
+            <h2>📋 Event Planning & Management</h2>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <div class="card">
+                    <h3>Event Configuration</h3>
+                    <div class="form-group">
+                        <label class="form-label">Event Date</label>
+                        <input type="date" id="eventDateInput" class="form-input" onchange="saveData()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Event Time</label>
+                        <input type="time" id="eventTime" class="form-input" onchange="saveData()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Duration (hours)</label>
+                        <input type="number" id="eventDuration" class="form-input" min="1" max="8" value="3" onchange="saveData()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Venue Location</label>
+                        <input type="text" id="venue" class="form-input" placeholder="City Library Conference Room" onchange="saveData()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Expected Capacity</label>
+                        <input type="number" id="capacity" class="form-input" value="30" onchange="saveData()">
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="card">
+                    <h3>Pre-Event Checklist</h3>
+                    <div class="progress">
+                        <div class="progress-fill" id="checklistProgress" style="width: 72%"></div>
+                    </div>
+                    <ul class="checklist" id="preEventChecklist">
+                        <li><input type="checkbox" checked onchange="updateProgress()"> <span>Venue confirmed and accessible</span></li>
+                        <li><input type="checkbox" checked onchange="updateProgress()"> <span>Date and time finalized</span></li>
+                        <li><input type="checkbox" checked onchange="updateProgress()"> <span>Workshop agenda completed</span></li>
+                        <li><input type="checkbox" checked onchange="updateProgress()"> <span>Learning objectives defined</span></li>
+                        <li><input type="checkbox" checked onchange="updateProgress()"> <span>WiFi access confirmed</span></li>
+                        <li><input type="checkbox" onchange="updateProgress()"> <span>Projector and equipment tested</span></li>
+                        <li><input type="checkbox" onchange="updateProgress()"> <span>Registration system operational</span></li>
+                        <li><input type="checkbox" onchange="updateProgress()"> <span>Pre-workshop instructions distributed</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Workshop Agenda Framework</h3>
+            <div class="grid-3">
+                <div class="card">
+                    <h4>Opening Session (30 min)</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> <span>Welcome & Introductions (10 min)</span></li>
+                        <li><input type="checkbox"> <span>Expectation Setting (10 min)</span></li>
+                        <li><input type="checkbox"> <span>AI Landscape Overview (10 min)</span></li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Core Content (45 min)</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> <span>AI in Daily Applications (15 min)</span></li>
+                        <li><input type="checkbox"> <span>Tool Categories & Use Cases (15 min)</span></li>
+                        <li><input type="checkbox"> <span>Live Demonstration (15 min)</span></li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Interactive Workshop (45 min)</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> <span>Hands-on Practice (30 min)</span></li>
+                        <li><input type="checkbox"> <span>Group Discussion & Q&A (15 min)</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Attendees Section -->
+    <section id="attendees" class="section">
+        <div class="section-header">
+            <button class="btn btn-ghost" onclick="showDashboard()">← Back to Dashboard</button>
+            <h2>👥 Attendee Management</h2>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <div class="card">
+                    <h3>Registration Overview</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                        <div>
+                            <div class="stat-number" style="font-size: 1.5rem;">30</div>
+                            <div class="text-muted">Target Capacity</div>
+                        </div>
+                        <div>
+                            <div class="stat-number" style="font-size: 1.5rem;" id="confirmedCount">24</div>
+                            <div class="text-muted">Confirmed</div>
+                        </div>
+                        <div>
+                            <div class="stat-number" style="font-size: 1.5rem;" id="waitlistCount">6</div>
+                            <div class="text-muted">Waitlist</div>
+                        </div>
+                        <div>
+                            <div class="stat-number" style="font-size: 1.5rem;">$50</div>
+                            <div class="text-muted">Per Person</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="sendReminders()">Send Reminders</button>
+                        <button class="btn btn-secondary" onclick="exportAttendeeList()">Export List</button>
+                        <button class="btn btn-secondary" onclick="addFromWaitlist()">Add from Waitlist</button>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="card">
+                    <h3>Add New Participant</h3>
+                    <form id="attendeeForm" onsubmit="addAttendee(event)">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" id="attendeeName" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" id="attendeeEmail" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" id="attendeePhone" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">AI Experience Level</label>
+                            <select id="attendeeExperience" class="form-select">
+                                <option>None</option>
+                                <option>Beginner</option>
+                                <option>Intermediate</option>
+                                <option>Advanced</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Dietary Restrictions</label>
+                            <input type="text" id="attendeeDietary" class="form-input" placeholder="None">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Special Notes</label>
+                            <textarea id="attendeeNotes" class="form-textarea" placeholder="Any special requirements or notes"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Participant</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Participant Directory</h3>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>AI Experience</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendeeTable">
+                        <tr>
+                            <td>John Smith</td>
+                            <td>john@email.com</td>
+                            <td>555-0123</td>
+                            <td>Beginner</td>
+                            <td><span class="text-success">Confirmed</span></td>
+                            <td>
+                                <button class="btn btn-destructive" onclick="removeAttendee(this)">Remove</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Jane Doe</td>
+                            <td>jane@email.com</td>
+                            <td>555-0124</td>
+                            <td>None</td>
+                            <td><span class="text-success">Confirmed</span></td>
+                            <td>
+                                <button class="btn btn-destructive" onclick="removeAttendee(this)">Remove</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Budget Section -->
+    <section id="budget" class="section">
+        <div class="section-header">
+            <button class="btn btn-ghost" onclick="showDashboard()">← Back to Dashboard</button>
+            <h2>💰 Financial Management</h2>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <div class="card">
+                    <h3>Financial Overview</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                        <div>
+                            <div class="stat-number" style="font-size: 1.5rem;" id="totalRevenue">$1,200</div>
+                            <div class="text-muted">Total Revenue</div>
+                        </div>
+                        <div>
+                            <div class="stat-number" style="font-size: 1.5rem;" id="totalExpenses">$850</div>
+                            <div class="text-muted">Total Expenses</div>
+                        </div>
+                        <div>
+                            <div class="stat-number text-success" style="font-size: 1.5rem;" id="netProfit">$350</div>
+                            <div class="text-muted">Net Profit</div>
+                        </div>
+                        <div>
+                            <div class="stat-number" style="font-size: 1.5rem;" id="profitMargin">29%</div>
+                            <div class="text-muted">Margin</div>
+                        </div>
+                    </div>
+                    <div class="card" style="background: hsl(var(--muted)); padding: 1rem;">
+                        <h4 style="margin-bottom: 0.5rem;">Break-even Analysis</h4>
+                        <p><strong>Break-even Point:</strong> 17 participants</p>
+                        <p><strong>Current Registrations:</strong> 24 confirmed</p>
+                        <p><strong>Safety Buffer:</strong> 7 additional registrations</p>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="card">
+                    <h3>Add New Expense</h3>
+                    <form id="expenseForm" onsubmit="addExpense(event)">
+                        <div class="form-group">
+                            <label class="form-label">Expense Category</label>
+                            <select id="expenseCategory" class="form-select">
+                                <option>Venue</option>
+                                <option>Technology</option>
+                                <option>Materials</option>
+                                <option>Marketing</option>
+                                <option>Food & Beverages</option>
+                                <option>Personnel</option>
+                                <option>Miscellaneous</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <input type="text" id="expenseDescription" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amount ($)</label>
+                            <input type="number" id="expenseAmount" class="form-input" min="0" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Vendor/Supplier</label>
+                            <input type="text" id="expenseVendor" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Payment Status</label>
+                            <select id="expenseStatus" class="form-select">
+                                <option>Pending</option>
+                                <option>Paid</option>
+                                <option>Overdue</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Expense</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Expense Tracking</h3>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Vendor</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expenseTable">
+                        <tr>
+                            <td>Venue</td>
+                            <td>Library Conference Room</td>
+                            <td>$300</td>
+                            <td>City Library</td>
+                            <td><span class="text-success">Paid</span></td>
+                            <td><button class="btn btn-destructive" onclick="removeExpense(this)">Remove</button></td>
+                        </tr>
+                        <tr>
+                            <td>Technology</td>
+                            <td>AV Equipment Rental</td>
+                            <td>$200</td>
+                            <td>AV Rental Co</td>
+                            <td><span class="text-warning">Pending</span></td>
+                            <td><button class="btn btn-destructive" onclick="removeExpense(this)">Remove</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Content Section -->
+    <section id="content" class="section">
+        <div class="section-header">
+            <button class="btn btn-ghost" onclick="showDashboard()">← Back to Dashboard</button>
+            <h2>📚 Workshop Content Management</h2>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <div class="card">
+                    <h3>Learning Objectives</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid hsl(var(--border));">
+                            ✓ Understand fundamental AI concepts and terminology
+                        </li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid hsl(var(--border));">
+                            ✓ Gain hands-on experience with 2-3 AI tools
+                        </li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid hsl(var(--border));">
+                            ✓ Learn practical applications for personal/professional contexts
+                        </li>
+                        <li style="padding: 0.5rem 0;">
+                            ✓ Build confidence in independent AI tool exploration
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>AI Tools Curriculum</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox" checked> <span>ChatGPT - Text generation and assistance</span></li>
+                        <li><input type="checkbox" checked> <span>Claude - Advanced AI conversation</span></li>
+                        <li><input type="checkbox"> <span>DALL-E - Image creation and editing</span></li>
+                        <li><input type="checkbox"> <span>Canva AI - Design automation</span></li>
+                        <li><input type="checkbox"> <span>Grammarly - Writing enhancement</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <div class="card">
+                    <h3>Interactive Activities</h3>
+                    
+                    <h4>Activity 1: AI Writing Assistant (20 min)</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> <span>Demo environment prepared</span></li>
+                        <li><input type="checkbox"> <span>Sample prompts and scenarios ready</span></li>
+                        <li><input type="checkbox"> <span>Exercise variations defined</span></li>
+                    </ul>
+
+                    <h4>Activity 2: Creative AI Tools (20 min)</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> <span>Image generation tool access confirmed</span></li>
+                        <li><input type="checkbox"> <span>Prompt templates prepared</span></li>
+                        <li><input type="checkbox"> <span>Example outputs ready for demonstration</span></li>
+                    </ul>
+
+                    <h4>Activity 3: Problem-Solving Session (15 min)</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> <span>Challenge framework designed</span></li>
+                        <li><input type="checkbox"> <span>Real-world examples prepared</span></li>
+                        <li><input type="checkbox"> <span>Debrief questions structured</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Discussion Framework & Resources</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>Opening Discussion Prompts</h4>
+                    <ul style="list-style: disc; padding-left: 1rem;">
+                        <li>"Who has previous experience with AI tools? What was your experience?"</li>
+                        <li>"What hopes or concerns do you have about AI technology?"</li>
+                        <li>"Where do you see AI being most valuable in your work or personal life?"</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Resource Distribution Checklist</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> <span>AI tools reference sheet prepared</span></li>
+                        <li><input type="checkbox"> <span>Best practices guide compiled</span></li>
+                        <li><input type="checkbox"> <span>Continued learning resources organized</span></li>
+                        <li><input type="checkbox"> <span>Community group contacts available</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marketing Section -->
+    <section id="marketing" class="section">
+        <div class="section-header">
+            <button class="btn btn-ghost" onclick="showDashboard()">← Back to Dashboard</button>
+            <h2>📢 Marketing Campaign Dashboard</h2>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <div class="card">
+                    <h3>Campaign Performance</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                        <div>
+                            <div class="stat-number" style="font-size: 1.5rem;">2,450</div>
+                            <div class="text-muted">Total Reach</div>
+                        </div>
+                        <div>
+                            <div class="stat-number" style="font-size: 1.5rem;">24</div>
+                            <div class="text-muted">Registrations</div>
+                        </div>
+                        <div>
+                            <div class="stat-number" style="font-size: 1.5rem;">0.98%</div>
+                            <div class="text-muted">Conversion Rate</div>
+                        </div>
+                        <div>
+                            <div class="stat-number" style="font-size: 1.5rem;">$4.17</div>
+                            <div class="text-muted">Cost per Registration</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Marketing Timeline</h3>
+                    <ul class="checklist">
+                        <li><input type="checkbox" checked> <span>Week 1: Launch announcement campaign</span></li>
+                        <li><input type="checkbox" checked> <span>Week 2: Social media amplification</span></li>
+                        <li><input type="checkbox"> <span>This week: Final reminder communications</span></li>
+                        <li><input type="checkbox"> <span>Event day: Live social updates</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <div class="card">
+                    <h3>Channel Performance Analysis</h3>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Channel</th>
+                                    <th>Reach</th>
+                                    <th>Clicks</th>
+                                    <th>Conversions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Facebook</td>
+                                    <td>1,200</td>
+                                    <td>180</td>
+                                    <td>12</td>
+                                </tr>
+                                <tr>
+                                    <td>LinkedIn</td>
+                                    <td>800</td>
+                                    <td>120</td>
+                                    <td>8</td>
+                                </tr>
+                                <tr>
+                                    <td>Email Marketing</td>
+                                    <td>300</td>
+                                    <td>90</td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <td>Word-of-mouth</td>
+                                    <td>150</td>
+                                    <td>-</td>
+                                    <td>1</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-3">
+            <div class="card">
+                <h4>Content Library Status</h4>
+                <h5 style="margin: 1rem 0 0.5rem;">📱 Social Media</h5>
+                <ul class="checklist">
+                    <li><input type="checkbox" checked> <span>LinkedIn professional post</span></li>
+                    <li><input type="checkbox" checked> <span>Facebook event page</span></li>
+                    <li><input type="checkbox" checked> <span>Instagram story series</span></li>
+                </ul>
+
+                <h5 style="margin: 1rem 0 0.5rem;">📧 Email Campaigns</h5>
+                <ul class="checklist">
+                    <li><input type="checkbox" checked> <span>Launch announcement</span></li>
+                    <li><input type="checkbox" checked> <span>Reminder sequence</span></li>
+                    <li><input type="checkbox"> <span>Follow-up templates</span></li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h4>Partnership Network</h4>
+                <h5 style="margin: 1rem 0 0.5rem;">✅ Confirmed Partners</h5>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 0.25rem 0;">City Library (Venue Host)</li>
+                    <li style="padding: 0.25rem 0;">Tech Meetup Group (Promotion)</li>
+                </ul>
+
+                <h5 style="margin: 1rem 0 0.5rem;">⏳ Pending Responses</h5>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 0.25rem 0;">Chamber of Commerce</li>
+                    <li style="padding: 0.25rem 0;">Community College</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h4>Next Campaign Actions</h4>
+                <ul class="checklist">
+                    <li><input type="checkbox"> <span>Send final reminder email tomorrow</span></li>
+                    <li><input type="checkbox"> <span>Post event day social updates</span></li>
+                    <li><input type="checkbox"> <span>Share behind-the-scenes content</span></li>
+                    <li><input type="checkbox"> <span>Collect participant testimonials</span></li>
+                    <li><input type="checkbox"> <span>Create success story posts</span></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section id="resources" class="section">
+        <div class="section-header">
+            <button class="btn btn-ghost" onclick="showDashboard()">← Back to Dashboard</button>
+            <h2>🎯 Resources & Logistics Management</h2>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <div class="card">
+                    <h3>Technology Infrastructure</h3>
+                    <h4>Audio/Visual Equipment</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox" checked> <span>Projector or large display confirmed</span></li>
+                        <li><input type="checkbox" checked> <span>HDMI/USB-C connection cables</span></li>
+                        <li><input type="checkbox"> <span>Extension cords and power distribution</span></li>
+                        <li><input type="checkbox"> <span>Microphone system (if required)</span></li>
+                        <li><input type="checkbox"> <span>Backup devices and adapters</span></li>
+                    </ul>
+
+                    <h4>Digital Setup</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox" checked> <span>WiFi network tested for capacity</span></li>
+                        <li><input type="checkbox" checked> <span>Guest network access configured</span></li>
+                        <li><input type="checkbox" checked> <span>AI platform accounts activated</span></li>
+                        <li><input type="checkbox"> <span>Mobile hotspot backup prepared</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <div class="card">
+                    <h3>Physical Materials</h3>
+                    <h4>Stationery & Supplies</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> <span>Name tags and markers</span></li>
+                        <li><input type="checkbox"> <span>Notebooks/notepads for participants</span></li>
+                        <li><input type="checkbox"> <span>Writing instruments (extras available)</span></li>
+                        <li><input type="checkbox"> <span>Sticky notes for activities</span></li>
+                        <li><input type="checkbox"> <span>Sign-in sheets and clipboards</span></li>
+                    </ul>
+
+                    <h4>Printed Materials</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox" checked> <span>Workshop agenda (30 copies)</span></li>
+                        <li><input type="checkbox" checked> <span>Resource handout with links</span></li>
+                        <li><input type="checkbox"> <span>Feedback forms prepared</span></li>
+                        <li><input type="checkbox"> <span>Contact information cards</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Setup & Environment Management</h3>
+            <div class="grid-3">
+                <div class="card">
+                    <h4>Room Configuration</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> <span>Seating arrangement optimized</span></li>
+                        <li><input type="checkbox"> <span>Tables positioned for laptops</span></li>
+                        <li><input type="checkbox"> <span>Presentation area cleared</span></li>
+                        <li><input type="checkbox"> <span>Registration table prepared</span></li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Environmental Factors</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox" checked> <span>Temperature comfortable</span></li>
+                        <li><input type="checkbox" checked> <span>Lighting adequate for work</span></li>
+                        <li><input type="checkbox"> <span>Ventilation appropriate</span></li>
+                        <li><input type="checkbox"> <span>Noise levels manageable</span></li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Contingency Planning</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox" checked> <span>Offline activities prepared</span></li>
+                        <li><input type="checkbox"> <span>Printed examples available</span></li>
+                        <li><input type="checkbox" checked> <span>Technical support contact ready</span></li>
+                        <li><input type="checkbox"> <span>Venue emergency procedures known</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Setup Timeline</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>Day Before Preparation</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> <span>Room layout completed</span></li>
+                        <li><input type="checkbox"> <span>Technology testing finalized</span></li>
+                        <li><input type="checkbox"> <span>Materials organized and staged</span></li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Event Day Setup (2 hours prior)</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> <span>Final room arrangement</span></li>
+                        <li><input type="checkbox"> <span>Technology systems final check</span></li>
+                        <li><input type="checkbox"> <span>Materials distribution setup</span></li>
+                        <li><input type="checkbox"> <span>Registration area activated</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Follow-up Section -->
+    <section id="followup" class="section">
+        <div class="section-header">
+            <button class="btn btn-ghost" onclick="showDashboard()">← Back to Dashboard</button>
+            <h2>📧 Post-Event Engagement System</h2>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <div class="card">
+                    <h3>Follow-up Timeline</h3>
+                    <h4>Immediate Actions (24 hours)</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> <span>Thank you email distributed</span></li>
+                        <li><input type="checkbox"> <span>Workshop resources shared</span></li>
+                        <li><input type="checkbox"> <span>Feedback survey launched</span></li>
+                    </ul>
+
+                    <h4>One Week Follow-up</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> <span>Progress check-in email</span></li>
+                        <li><input type="checkbox"> <span>AI learning tips shared</span></li>
+                        <li><input type="checkbox"> <span>Individual support offered</span></li>
+                    </ul>
+
+                    <h4>One Month Assessment</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> <span>Comprehensive progress review</span></li>
+                        <li><input type="checkbox"> <span>Advanced learning recommendations</span></li>
+                        <li><input type="checkbox"> <span>Future workshop opportunities</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <div class="card">
+                    <h3>Feedback Collection System</h3>
+                    <h4>Core Survey Questions</h4>
+                    <ol style="padding-left: 1rem;">
+                        <li>Overall workshop value assessment (1-5 scale)</li>
+                        <li>Most beneficial component identification</li>
+                        <li>Areas for improvement suggestions</li>
+                        <li>Current confidence level with AI tools</li>
+                        <li>Recommendation likelihood to others</li>
+                        <li>Additional learning interests</li>
+                    </ol>
+
+                    <h4>Success Metrics Tracking</h4>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                        <div>
+                            <label class="form-label">Email Open Rate (%)</label>
+                            <input type="number" value="85" class="form-input" style="width: 80px;">
+                        </div>
+                        <div>
+                            <label class="form-label">Survey Completion (%)</label>
+                            <input type="number" value="70" class="form-input" style="width: 80px;">
+                        </div>
+                        <div>
+                            <label class="form-label">Resource Engagement (%)</label>
+                            <input type="number" value="40" class="form-input" style="width: 80px;">
+                        </div>
+                        <div>
+                            <label class="form-label">Referrals Generated</label>
+                            <input type="number" value="8" class="form-input" style="width: 80px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Community Building & Long-term Engagement</h3>
+            <div class="grid-3">
+                <div class="card">
+                    <h4>Alumni Community</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> <span>Discord server established</span></li>
+                        <li><input type="checkbox"> <span>Welcome onboarding sequence</span></li>
+                        <li><input type="checkbox"> <span>Monthly virtual meetups scheduled</span></li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Content Development</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> <span>Weekly AI tips email series</span></li>
+                        <li><input type="checkbox"> <span>Success story template creation</span></li>
+                        <li><input type="checkbox"> <span>Resource update scheduling</span></li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Future Programming</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> <span>Advanced workshop development</span></li>
+                        <li><input type="checkbox"> <span>Industry-specific sessions</span></li>
+                        <li><input type="checkbox"> <span>Online follow-up series</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Communication Template Management</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>Thank You Email Template</h4>
+                    <textarea rows="6" placeholder="Craft your post-workshop thank you message with resource links and next steps..." class="form-textarea"></textarea>
+                    <button class="btn btn-primary" style="margin-top: 0.5rem;">Save Template</button>
+                </div>
+                <div class="card">
+                    <h4>Follow-up Check-in Template</h4>
+                    <textarea rows="6" placeholder="Create your one-week follow-up message to check progress and offer support..." class="form-textarea"></textarea>
+                    <button class="btn btn-primary" style="margin-top: 0.5rem;">Save Template</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Data Management
+        let eventData = JSON.parse(localStorage.getItem('justLearnEventData')) || {
+            attendees: [],
+            expenses: [],
+            checklist: {},
+            theme: 'dark'
+        };
+
+        // Theme Management
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.className = newTheme;
+            eventData.theme = newTheme;
+            saveData();
+            
+            // Update theme icons
+            const sunIcon = document.querySelector('.sun-icon');
+            const moonIcon = document.querySelector('.moon-icon');
+            
+            if (newTheme === 'dark') {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            } else {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            }
+        }
+
+        // Navigation Functions
+        function showSection(sectionId) {
+            document.getElementById('dashboard').style.display = 'none';
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        function showDashboard() {
+            document.getElementById('dashboard').style.display = 'block';
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            updateDashboardStats();
+        }
+
+        // Data Persistence
+        function saveData() {
+            localStorage.setItem('justLearnEventData', JSON.stringify(eventData));
+        }
+
+        // Attendee Management
+        function addAttendee(event) {
+            event.preventDefault();
+            
+            const attendee = {
+                name: document.getElementById('attendeeName').value,
+                email: document.getElementById('attendeeEmail').value,
+                phone: document.getElementById('attendeePhone').value,
+                experience: document.getElementById('attendeeExperience').value,
+                dietary: document.getElementById('attendeeDietary').value,
+                notes: document.getElementById('attendeeNotes').value,
+                status: 'Confirmed'
+            };
+
+            eventData.attendees.push(attendee);
+            
+            const table = document.getElementById('attendeeTable');
+            const row = table.insertRow();
+            row.innerHTML = `
+                <td>${attendee.name}</td>
+                <td>${attendee.email}</td>
+                <td>${attendee.phone}</td>
+                <td>${attendee.experience}</td>
+                <td><span class="text-success">${attendee.status}</span></td>
+                <td><button class="btn btn-destructive" onclick="removeAttendee(this)">Remove</button></td>
+            `;
+
+            document.getElementById('attendeeForm').reset();
+            saveData();
+            updateDashboardStats();
+        }
+
+        function removeAttendee(button) {
+            if (confirm('Are you sure you want to remove this participant?')) {
+                button.closest('tr').remove();
+                updateDashboardStats();
+                saveData();
+            }
+        }
+
+        // Budget Management
+        function addExpense(event) {
+            event.preventDefault();
+            
+            const expense = {
+                category: document.getElementById('expenseCategory').value,
+                description: document.getElementById('expenseDescription').value,
+                amount: parseFloat(document.getElementById('expenseAmount').value),
+                vendor: document.getElementById('expenseVendor').value,
+                status: document.getElementById('expenseStatus').value
+            };
+
+            eventData.expenses.push(expense);
+            
+            const table = document.getElementById('expenseTable');
+            const row = table.insertRow();
+            
+            const statusClass = expense.status === 'Paid' ? 'text-success' : 
+                              expense.status === 'Overdue' ? 'text-destructive' : 'text-warning';
+            
+            row.innerHTML = `
+                <td>${expense.category}</td>
+                <td>${expense.description}</td>
+                <td>$${expense.amount}</td>
+                <td>${expense.vendor}</td>
+                <td><span class="${statusClass}">${expense.status}</span></td>
+                <td><button class="btn btn-destructive" onclick="removeExpense(this)">Remove</button></td>
+            `;
+
+            document.getElementById('expenseForm').reset();
+            saveData();
+            updateBudgetSummary();
+            updateDashboardStats();
+        }
+
+        function removeExpense(button) {
+            if (confirm('Are you sure you want to remove this expense?')) {
+                button.closest('tr').remove();
+                updateBudgetSummary();
+                updateDashboardStats();
+                saveData();
+            }
+        }
+
+        function updateBudgetSummary() {
+            const expenseRows = document.getElementById('expenseTable').querySelectorAll('tr');
+            let totalExpenses = 0;
+            
+            expenseRows.forEach(row => {
+                const amountText = row.cells[2]?.textContent;
+                if (amountText) {
+                    totalExpenses += parseFloat(amountText.replace('$', '')) || 0;
+                }
+            });
+
+            const totalRevenue = 1200; // Calculate from attendees
+            const netProfit = totalRevenue - totalExpenses;
+            const margin = ((netProfit / totalRevenue) * 100).toFixed(1);
+
+            document.getElementById('totalExpenses').textContent = '$' + totalExpenses.toFixed(0);
+            document.getElementById('netProfit').textContent = '$' + netProfit.toFixed(0);
+            document.getElementById('profitMargin').textContent = margin + '%';
+        }
+
+        // Progress Tracking
+        function updateProgress() {
+            const checklists = document.querySelectorAll('.checklist');
+            let totalItems = 0;
+            let completedItems = 0;
+
+            checklists.forEach(checklist => {
+                const checkboxes = checklist.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    totalItems++;
+                    if (checkbox.checked) completedItems++;
+                });
+            });
+
+            const progress = totalItems > 0 ? (completedItems / totalItems) * 100 : 0;
+            const progressBars = document.querySelectorAll('.progress-fill');
+            progressBars.forEach(bar => {
+                bar.style.width = progress + '%';
+            });
+
+            // Update dashboard
+            const taskProgress = document.getElementById('taskProgress');
+            if (taskProgress) {
+                taskProgress.textContent = `${completedItems}/${totalItems}`;
+            }
+
+            saveData();
+        }
+
+        // Dashboard Updates
+        function updateDashboardStats() {
+            // Update attendee count
+            const attendeeRows = document.getElementById('attendeeTable').querySelectorAll('tr').length;
+            document.getElementById('attendeeCount').textContent = attendeeRows;
+            const confirmedCount = document.getElementById('confirmedCount');
+            if (confirmedCount) {
+                confirmedCount.textContent = attendeeRows;
+            }
+
+            // Update days until event
+            const eventDateInput = document.getElementById('eventDateInput');
+            if (eventDateInput && eventDateInput.value) {
+                const eventDate = new Date(eventDateInput.value);
+                const today = new Date();
+                const timeDiff = eventDate.getTime() - today.getTime();
+                const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                document.getElementById('daysUntil').textContent = daysDiff > 0 ? daysDiff : 0;
+            }
+        }
+
+        // Utility Functions
+        function sendReminders() {
+            alert('Reminder emails would be sent to all confirmed participants.');
+        }
+
+        function exportAttendeeList() {
+            alert('Participant directory would be exported as CSV file.');
+        }
+
+        function addFromWaitlist() {
+            alert('Function to promote participants from waitlist to confirmed status.');
+        }
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                showDashboard();
+            }
+        });
+
+        // Add keyboard navigation for cards
+        document.querySelectorAll('.nav-card').forEach(card => {
+            card.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+        });
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set theme
+            if (eventData.theme) {
+                document.documentElement.className = eventData.theme;
+                const sunIcon = document.querySelector('.sun-icon');
+                const moonIcon = document.querySelector('.moon-icon');
+                
+                if (eventData.theme === 'dark') {
+                    sunIcon.style.display = 'block';
+                    moonIcon.style.display = 'none';
+                } else {
+                    sunIcon.style.display = 'none';
+                    moonIcon.style.display = 'block';
+                }
+            }
+
+            updateDashboardStats();
+            updateProgress();
+            
+            // Set default event date
+            const eventDateInput = document.getElementById('eventDateInput');
+            if (eventDateInput && !eventDateInput.value) {
+                const today = new Date();
+                today.setDate(today.getDate() + 3);
+                eventDateInput.value = today.toISOString().split('T')[0];
+            }
+
+            // Update all progress bars
+            updateProgress();
+        });
+
+        // Auto-save functionality
+        document.addEventListener('input', function(e) {
+            if (e.target.matches('input[type="date"], input[type="time"], input[type="number"], input[type="text"], textarea')) {
+                setTimeout(saveData, 500);
+            }
+        });
+
+        document.addEventListener('change', function(e) {
+            if (e.target.matches('input[type="checkbox"], select')) {
+                saveData();
+                updateProgress();
+            }
+        });
+    </script>
+</body>
+</html>

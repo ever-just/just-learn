@@ -1,0 +1,248 @@
+<mxfile host="app.diagrams.net" modified="2024-01-15T10:00:00.000Z" agent="5.0" etag="abc123" version="24.2.5">
+  <diagram name="Main Dashboard" id="dashboard">
+    <mxGraphModel dx="1422" dy="738" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <!-- Header -->
+        <mxCell id="header" value="Project Just-Learn: AI Workshop Management" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=20;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="1080" height="60" as="geometry"/>
+        </mxCell>
+        <!-- Quick Stats Cards -->
+        <mxCell id="stats1" value="Confirmed Attendees&#xa;24 / 30" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="60" y="140" width="150" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="stats2" value="Budget Status&#xa;$850 / $1200" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="240" y="140" width="150" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="stats3" value="Days Until Event&#xa;3 Days" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="420" y="140" width="150" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="stats4" value="Tasks Complete&#xa;18 / 25" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="600" y="140" width="150" height="80" as="geometry"/>
+        </mxCell>
+        <!-- Navigation Grid -->
+        <mxCell id="nav1" value="📋 Event Planning&#xa;Checklist &amp; Agenda" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=16" vertex="1" parent="1">
+          <mxGeometry x="60" y="280" width="220" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="nav2" value="👥 Attendee Management&#xa;Registration &amp; Communication" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=16" vertex="1" parent="1">
+          <mxGeometry x="320" y="280" width="220" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="nav3" value="💰 Budget Tracker&#xa;Revenue &amp; Expenses" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=16" vertex="1" parent="1">
+          <mxGeometry x="580" y="280" width="220" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="nav4" value="📚 Workshop Content&#xa;Agenda &amp; Materials" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=16" vertex="1" parent="1">
+          <mxGeometry x="840" y="280" width="220" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="nav5" value="📢 Marketing Campaign&#xa;Promotion &amp; Outreach" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=16" vertex="1" parent="1">
+          <mxGeometry x="60" y="440" width="220" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="nav6" value="🎯 Resources &amp; Materials&#xa;Equipment &amp; Supplies" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d4edda;strokeColor=#28a745;fontSize=16" vertex="1" parent="1">
+          <mxGeometry x="320" y="440" width="220" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="nav7" value="📧 Follow-up System&#xa;Post-Event Communication" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1c0c7;strokeColor=#c94c4c;fontSize=16" vertex="1" parent="1">
+          <mxGeometry x="580" y="440" width="220" height="120" as="geometry"/>
+        </mxCell>
+        <!-- Recent Activity -->
+        <mxCell id="activity" value="Recent Activity&#xa;• 3 new registrations today&#xa;• Budget updated - venue confirmed&#xa;• Marketing emails sent (85% open rate)&#xa;• Materials checklist 80% complete" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=12;align=left" vertex="1" parent="1">
+          <mxGeometry x="840" y="440" width="220" height="120" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  
+  <diagram name="Registration Management" id="registration">
+    <mxGraphModel dx="1422" dy="738" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <!-- Header -->
+        <mxCell id="reg-header" value="Attendee Registration Management" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=18;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="1080" height="50" as="geometry"/>
+        </mxCell>
+        <!-- Registration Stats -->
+        <mxCell id="reg-stats" value="Registration Overview&#xa;Confirmed: 24 | Waitlist: 6 | Capacity: 30&#xa;No-shows expected: 2-3 (10%)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1ecf1;strokeColor=#0c5460;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="60" y="120" width="400" height="80" as="geometry"/>
+        </mxCell>
+        <!-- Quick Actions -->
+        <mxCell id="reg-actions" value="Quick Actions&#xa;[Send Reminder] [Export List]&#xa;[Add from Waitlist] [Mark No-Show]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d4edda;strokeColor=#155724;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="500" y="120" width="300" height="80" as="geometry"/>
+        </mxCell>
+        <!-- Attendee List Table -->
+        <mxCell id="attendee-table" value="Attendee List&#xa;┌─────────────────────────────────────────────────────────────┐&#xa;│ Name        │ Email           │ Phone     │ AI Exp │ Status    │&#xa;├─────────────────────────────────────────────────────────────┤&#xa;│ John Smith  │ john@email.com  │ 555-0123  │ Beginner│ Confirmed │&#xa;│ Jane Doe    │ jane@email.com  │ 555-0124  │ None    │ Confirmed │&#xa;│ Mike Wilson │ mike@email.com  │ 555-0125  │ Inter.  │ Waitlist  │&#xa;│ [Add Row]   │                 │           │         │           │&#xa;└─────────────────────────────────────────────────────────────┘" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#6c757d;fontSize=12;fontFamily=Courier New;align=left" vertex="1" parent="1">
+          <mxGeometry x="60" y="240" width="740" height="200" as="geometry"/>
+        </mxCell>
+        <!-- Communication Templates -->
+        <mxCell id="comm-templates" value="Communication Templates&#xa;┌ Confirmation Email ┐ ┌ Reminder Email ┐&#xa;│ Subject: Welcome!   │ │ Subject: Tomorrow! │&#xa;│ • Event details     │ │ • Final reminders  │&#xa;│ • What to bring     │ │ • Contact info     │&#xa;│ [Edit] [Send]       │ │ [Edit] [Send]      │&#xa;└─────────────────────┘ └────────────────────┘" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e2e3e5;strokeColor=#383d41;fontSize=12;fontFamily=Courier New;align=left" vertex="1" parent="1">
+          <mxGeometry x="60" y="480" width="500" height="150" as="geometry"/>
+        </mxCell>
+        <!-- Check-in Process -->
+        <mxCell id="checkin" value="Day-of Check-in&#xa;□ Registration table setup&#xa;□ Name tags prepared&#xa;□ Attendance sheet ready&#xa;□ Materials organized&#xa;&#xa;Emergency Contact:&#xa;📞 [Your Phone Number]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3cd;strokeColor=#856404;fontSize=12;align=left" vertex="1" parent="1">
+          <mxGeometry x="600" y="480" width="200" height="150" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram name="Budget Tracker" id="budget">
+    <mxGraphModel dx="1422" dy="738" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <!-- Header -->
+        <mxCell id="budget-header" value="Project Just-Learn Budget Tracker" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=18;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="1080" height="50" as="geometry"/>
+        </mxCell>
+        <!-- Financial Summary -->
+        <mxCell id="fin-summary" value="Financial Summary&#xa;Total Revenue: $1,200 (24 attendees × $50)&#xa;Total Expenses: $850&#xa;Net Profit: $350" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d4edda;strokeColor=#155724;fontSize=16;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="60" y="120" width="350" height="100" as="geometry"/>
+        </mxCell>
+        <!-- Break-even Analysis -->
+        <mxCell id="breakeven" value="Break-even Analysis&#xa;Break-even: 17 attendees&#xa;Current: 24 confirmed&#xa;Buffer: 7 extra (safety margin)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1ecf1;strokeColor=#0c5460;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="450" y="120" width="300" height="100" as="geometry"/>
+        </mxCell>
+        <!-- Expense Breakdown -->
+        <mxCell id="expense-chart" value="Expense Breakdown&#xa;┌─────────────────────────┐&#xa;│ Venue Rental    $300    │&#xa;│ Equipment       $200    │&#xa;│ Materials       $150    │&#xa;│ Marketing       $100    │&#xa;│ Refreshments    $100    │&#xa;│ TOTAL          $850     │&#xa;└─────────────────────────┘" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#6c757d;fontSize=12;fontFamily=Courier New;align=left" vertex="1" parent="1">
+          <mxGeometry x="60" y="260" width="300" height="200" as="geometry"/>
+        </mxCell>
+        <!-- Payment Tracking -->
+        <mxCell id="payment-track" value="Payment Tracking&#xa;┌─────────────────────────────────┐&#xa;│ Vendor          │ Amount │ Status │&#xa;├─────────────────────────────────┤&#xa;│ City Library    │ $300   │ PAID   │&#xa;│ AV Rental Co    │ $200   │ DUE    │&#xa;│ Print Shop      │ $150   │ PAID   │&#xa;│ Coffee Service  │ $100   │ DUE    │&#xa;└─────────────────────────────────┘" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3cd;strokeColor=#856404;fontSize=12;fontFamily=Courier New;align=left" vertex="1" parent="1">
+          <mxGeometry x="400" y="260" width="400" height="200" as="geometry"/>
+        </mxCell>
+        <!-- Budget Status -->
+        <mxCell id="budget-status" value="Budget Health: ✅ GREEN&#xa;Revenue exceeds expenses&#xa;with healthy 29% margin&#xa;&#xa;Next Review: Day before event&#xa;Contingency fund: $120 available" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="60" y="500" width="300" height="120" as="geometry"/>
+        </mxCell>
+        <!-- Revenue Sources -->
+        <mxCell id="revenue" value="Revenue Sources&#xa;Registration fees: $1,200&#xa;Sponsorships: $0&#xa;Material sales: $0&#xa;&#xa;Pricing: $50/person&#xa;Early bird: $40 (expired)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1c0c7;strokeColor=#721c24;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="400" y="500" width="300" height="120" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram name="Marketing Campaign" id="marketing">
+    <mxGraphModel dx="1422" dy="738" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <!-- Header -->
+        <mxCell id="marketing-header" value="Marketing Campaign Dashboard" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=18;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="1080" height="50" as="geometry"/>
+        </mxCell>
+        <!-- Campaign Overview -->
+        <mxCell id="campaign-stats" value="Campaign Performance&#xa;Total Reach: 2,450 people&#xa;Registrations: 24 (conversion: 0.98%)&#xa;Cost per registration: $4.17" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d4edda;strokeColor=#155724;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="60" y="120" width="400" height="80" as="geometry"/>
+        </mxCell>
+        <!-- Timeline -->
+        <mxCell id="timeline" value="Marketing Timeline&#xa;Week 1: Launch announcement ✅&#xa;Week 2: Social media push ✅&#xa;This week: Final reminders 🔄&#xa;Day-of: Live updates" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d1ecf1;strokeColor=#0c5460;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="500" y="120" width="300" height="80" as="geometry"/>
+        </mxCell>
+        <!-- Channel Performance -->
+        <mxCell id="channels" value="Marketing Channels&#xa;┌─────────────────────────────────────────┐&#xa;│ Channel      │ Reach │ Clicks │ Converts │&#xa;├─────────────────────────────────────────┤&#xa;│ Facebook     │ 1200  │ 180    │ 12       │&#xa;│ LinkedIn     │ 800   │ 120    │ 8        │&#xa;│ Email List   │ 300   │ 90     │ 3        │&#xa;│ Word-of-mouth│ 150   │ -      │ 1        │&#xa;└─────────────────────────────────────────┘" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#6c757d;fontSize=12;fontFamily=Courier New;align=left" vertex="1" parent="1">
+          <mxGeometry x="60" y="240" width="500" height="180" as="geometry"/>
+        </mxCell>
+        <!-- Content Library -->
+        <mxCell id="content" value="Content Library&#xa;📱 Social Media Posts&#xa;  • LinkedIn post ✅&#xa;  • Facebook event ✅&#xa;  • Instagram stories ✅&#xa;&#xa;📧 Email Templates&#xa;  • Launch email ✅&#xa;  • Reminder email ✅&#xa;&#xa;🖨️ Print Materials&#xa;  • Flyers (50 printed) ✅" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3cd;strokeColor=#856404;fontSize=12;align=left" vertex="1" parent="1">
+          <mxGeometry x="600" y="240" width="200" height="180" as="geometry"/>
+        </mxCell>
+        <!-- Next Actions -->
+        <mxCell id="next-actions" value="Next Marketing Actions&#xa;□ Send final reminder email (tomorrow)&#xa;□ Post day-of social updates&#xa;□ Share behind-the-scenes content&#xa;□ Collect testimonials during event&#xa;□ Post thank you &amp; success story" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e2e3e5;strokeColor=#383d41;fontSize=12;align=left" vertex="1" parent="1">
+          <mxGeometry x="60" y="450" width="400" height="120" as="geometry"/>
+        </mxCell>
+        <!-- Partnership Outreach -->
+        <mxCell id="partnerships" value="Partnership Status&#xa;City Library: Hosting ✅&#xa;Local Tech Meetup: Promotion ✅&#xa;Community College: Declined&#xa;Chamber of Commerce: Pending&#xa;&#xa;Potential for next event:&#xa;Coffee shops for flyers" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1c0c7;strokeColor=#721c24;fontSize=12;align=left" vertex="1" parent="1">
+          <mxGeometry x="500" y="450" width="300" height="120" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram name="User Flow" id="userflow">
+    <mxGraphModel dx="1422" dy="738" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <!-- Title -->
+        <mxCell id="flow-title" value="Event Organizer User Flow" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=20;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="400" y="40" width="300" height="40" as="geometry"/>
+        </mxCell>
+        <!-- Start -->
+        <mxCell id="start" value="Event Organizer&#xa;Starts Planning" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="500" y="120" width="120" height="80" as="geometry"/>
+        </mxCell>
+        <!-- Dashboard -->
+        <mxCell id="dashboard-flow" value="Main Dashboard&#xa;Overview &amp; Navigation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="480" y="240" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <!-- Planning Phase -->
+        <mxCell id="planning" value="📋 Planning Phase&#xa;• Set agenda&#xa;• Create checklist&#xa;• Budget setup" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="80" y="360" width="140" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="marketing-flow" value="📢 Marketing Phase&#xa;• Create campaigns&#xa;• Track performance&#xa;• Manage outreach" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="260" y="360" width="140" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="registration-flow" value="👥 Registration&#xa;• Track attendees&#xa;• Send communications&#xa;• Manage waitlist" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="440" y="360" width="140" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="resources-flow" value="🎯 Resources&#xa;• Equipment checklist&#xa;• Material preparation&#xa;• Setup timeline" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="620" y="360" width="140" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="budget-flow" value="💰 Budget Tracking&#xa;• Monitor expenses&#xa;• Track payments&#xa;• Revenue analysis" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="800" y="360" width="140" height="80" as="geometry"/>
+        </mxCell>
+        <!-- Event Day -->
+        <mxCell id="event-day" value="🎉 Event Day&#xa;Execution &amp; Management" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d4edda;strokeColor=#28a745;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="480" y="500" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <!-- Follow-up -->
+        <mxCell id="followup-flow" value="📧 Post-Event&#xa;Follow-up &amp; Analysis" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1c0c7;strokeColor=#721c24;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="480" y="620" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <!-- Arrows -->
+        <mxCell id="arrow1" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="start" target="dashboard-flow">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="560" y="250" as="sourcePoint"/>
+            <mxPoint x="610" y="200" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow2" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="dashboard-flow" target="planning">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="480" y="310" as="sourcePoint"/>
+            <mxPoint x="200" y="360" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow3" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="dashboard-flow" target="marketing-flow">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="310" as="sourcePoint"/>
+            <mxPoint x="330" y="360" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow4" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="dashboard-flow" target="registration-flow">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="540" y="310" as="sourcePoint"/>
+            <mxPoint x="510" y="360" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow5" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="dashboard-flow" target="resources-flow">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="580" y="310" as="sourcePoint"/>
+            <mxPoint x="690" y="360" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow6" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="dashboard-flow" target="budget-flow">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="600" y="310" as="sourcePoint"/>
+            <mxPoint x="870" y="360" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow7" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1" source="event-day" target="followup-flow">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="560" y="580" as="sourcePoint"/>
+            <mxPoint x="560" y="620" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

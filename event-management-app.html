@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Just-Learn: AI Workshop Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            margin: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .stat-card {
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid;
+        }
+
+        .stat-card.attendees { 
+            background: #fff2cc; 
+            border-color: #d6b656; 
+        }
+        .stat-card.budget { 
+            background: #e1d5e7; 
+            border-color: #9673a6; 
+        }
+        .stat-card.days { 
+            background: #f8cecc; 
+            border-color: #b85450; 
+        }
+        .stat-card.tasks { 
+            background: #dae8fc; 
+            border-color: #6c8ebf; 
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .nav-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 5px solid;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .nav-card.planning { border-color: #28a745; }
+        .nav-card.attendees { border-color: #ffc107; }
+        .nav-card.budget { border-color: #6f42c1; }
+        .nav-card.content { border-color: #007bff; }
+        .nav-card.marketing { border-color: #dc3545; }
+        .nav-card.resources { border-color: #20c997; }
+        .nav-card.followup { border-color: #fd7e14; }
+
+        .section {
+            display: none;
+            padding: 2rem;
+            background: white;
+            margin: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 1rem;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .btn.success { background: #28a745; }
+        .btn.success:hover { background: #218838; }
+        .btn.warning { background: #ffc107; color: #212529; }
+        .btn.warning:hover { background: #e0a800; }
+        .btn.danger { background: #dc3545; }
+        .btn.danger:hover { background: #c82333; }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            border: 1px solid #dee2e6;
+            text-align: left;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .checklist {
+            list-style: none;
+        }
+
+        .checklist li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .checklist input[type="checkbox"] {
+            margin-right: 0.5rem;
+            transform: scale(1.2);
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            background: #28a745;
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .card {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .text-center { text-align: center; }
+        .text-success { color: #28a745; }
+        .text-danger { color: #dc3545; }
+        .text-warning { color: #ffc107; }
+        .text-info { color: #17a2b8; }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .navigation {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .dashboard {
+            display: block;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🤖 Project Just-Learn: AI Workshop Management</h1>
+        <p>Comprehensive event planning and management system</p>
+    </header>
+
+    <div id="dashboard" class="dashboard">
+        <!-- Stats Dashboard -->
+        <div class="stats-grid">
+            <div class="stat-card attendees">
+                <div class="stat-number" id="attendeeCount">24</div>
+                <div>Confirmed Attendees</div>
+                <small>30 capacity</small>
+            </div>
+            <div class="stat-card budget">
+                <div class="stat-number" id="budgetStatus">$350</div>
+                <div>Net Profit</div>
+                <small>29% margin</small>
+            </div>
+            <div class="stat-card days">
+                <div class="stat-number" id="daysUntil">3</div>
+                <div>Days Until Event</div>
+                <small id="eventDate"></small>
+            </div>
+            <div class="stat-card tasks">
+                <div class="stat-number" id="taskProgress">18/25</div>
+                <div>Tasks Complete</div>
+                <small>72% done</small>
+            </div>
+        </div>
+
+        <!-- Navigation Cards -->
+        <div class="navigation">
+            <div class="nav-card planning" onclick="showSection('planning')">
+                <h3>📋 Event Planning</h3>
+                <p>Checklist, agenda template, and timeline management</p>
+            </div>
+            <div class="nav-card attendees" onclick="showSection('attendees')">
+                <h3>👥 Attendee Management</h3>
+                <p>Registration tracking and communication</p>
+            </div>
+            <div class="nav-card budget" onclick="showSection('budget')">
+                <h3>💰 Budget Tracker</h3>
+                <p>Revenue, expenses, and financial planning</p>
+            </div>
+            <div class="nav-card content" onclick="showSection('content')">
+                <h3>📚 Workshop Content</h3>
+                <p>Learning objectives, activities, and materials</p>
+            </div>
+            <div class="nav-card marketing" onclick="showSection('marketing')">
+                <h3>📢 Marketing Campaign</h3>
+                <p>Promotion templates and outreach tracking</p>
+            </div>
+            <div class="nav-card resources" onclick="showSection('resources')">
+                <h3>🎯 Resources & Materials</h3>
+                <p>Equipment, supplies, and logistics</p>
+            </div>
+            <div class="nav-card followup" onclick="showSection('followup')">
+                <h3>📧 Follow-up System</h3>
+                <p>Post-event communication and feedback</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Planning Section -->
+    <div id="planning" class="section">
+        <div class="section-header">
+            <button class="back-btn" onclick="showDashboard()">← Back to Dashboard</button>
+            <h2>📋 Event Planning & Checklist</h2>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <h3>Event Details</h3>
+                <div class="form-group">
+                    <label>Event Date:</label>
+                    <input type="date" id="eventDate" onchange="saveData()">
+                </div>
+                <div class="form-group">
+                    <label>Event Time:</label>
+                    <input type="time" id="eventTime" onchange="saveData()">
+                </div>
+                <div class="form-group">
+                    <label>Duration (hours):</label>
+                    <input type="number" id="eventDuration" min="1" max="8" value="3" onchange="saveData()">
+                </div>
+                <div class="form-group">
+                    <label>Venue:</label>
+                    <input type="text" id="venue" placeholder="City Library Conference Room" onchange="saveData()">
+                </div>
+                <div class="form-group">
+                    <label>Expected Capacity:</label>
+                    <input type="number" id="capacity" value="30" onchange="saveData()">
+                </div>
+            </div>
+
+            <div>
+                <h3>Pre-Event Checklist</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="checklistProgress" style="width: 72%"></div>
+                </div>
+                <ul class="checklist" id="preEventChecklist">
+                    <li><input type="checkbox" checked onchange="updateProgress()"> Venue confirmed</li>
+                    <li><input type="checkbox" checked onchange="updateProgress()"> Date and time finalized</li>
+                    <li><input type="checkbox" checked onchange="updateProgress()"> Workshop agenda finalized</li>
+                    <li><input type="checkbox" checked onchange="updateProgress()"> Learning objectives defined</li>
+                    <li><input type="checkbox" checked onchange="updateProgress()"> WiFi access confirmed</li>
+                    <li><input type="checkbox" onchange="updateProgress()"> Projector/screen tested</li>
+                    <li><input type="checkbox" onchange="updateProgress()"> Registration system setup</li>
+                    <li><input type="checkbox" onchange="updateProgress()"> Pre-workshop instructions sent</li>
+                </ul>
+            </div>
+        </div>
+
+        <div>
+            <h3>Workshop Agenda Template</h3>
+            <div class="card">
+                <div class="grid-3">
+                    <div>
+                        <h4>Opening (30 min)</h4>
+                        <ul class="checklist">
+                            <li><input type="checkbox"> Welcome & Introductions (10 min)</li>
+                            <li><input type="checkbox"> Setting Expectations (10 min)</li>
+                            <li><input type="checkbox"> AI Landscape Overview (10 min)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Core Content (45 min)</h4>
+                        <ul class="checklist">
+                            <li><input type="checkbox"> AI in Everyday Life (15 min)</li>
+                            <li><input type="checkbox"> Types of AI Applications (15 min)</li>
+                            <li><input type="checkbox"> Hands-on Demo 1 (15 min)</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Practical Session (45 min)</h4>
+                        <ul class="checklist">
+                            <li><input type="checkbox"> Hands-on Workshop (30 min)</li>
+                            <li><input type="checkbox"> Group Discussion (15 min)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendees Section -->
+    <div id="attendees" class="section">
+        <div class="section-header">
+            <button class="back-btn" onclick="showDashboard()">← Back to Dashboard</button>
+            <h2>👥 Attendee Management</h2>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <h3>Registration Overview</h3>
+                <div class="card">
+                    <p><strong>Target Capacity:</strong> <span id="targetCapacity">30</span></p>
+                    <p><strong>Confirmed:</strong> <span id="confirmedCount">24</span></p>
+                    <p><strong>Waitlist:</strong> <span id="waitlistCount">6</span></p>
+                    <p><strong>Registration Method:</strong> Email & Form</p>
+                    <p><strong>Cost:</strong> $50 per person</p>
+                </div>
+
+                <h3>Quick Actions</h3>
+                <div>
+                    <button class="btn" onclick="sendReminders()">Send Reminder Emails</button>
+                    <button class="btn warning" onclick="exportAttendeeList()">Export List</button>
+                    <button class="btn success" onclick="addFromWaitlist()">Add from Waitlist</button>
+                </div>
+            </div>
+
+            <div>
+                <h3>Add New Attendee</h3>
+                <form id="attendeeForm" onsubmit="addAttendee(event)">
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <input type="text" id="attendeeName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="attendeeEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone:</label>
+                        <input type="tel" id="attendeePhone">
+                    </div>
+                    <div class="form-group">
+                        <label>AI Experience:</label>
+                        <select id="attendeeExperience">
+                            <option>None</option>
+                            <option>Beginner</option>
+                            <option>Intermediate</option>
+                            <option>Advanced</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Dietary Needs:</label>
+                        <input type="text" id="attendeeDietary" placeholder="None">
+                    </div>
+                    <div class="form-group">
+                        <label>Notes:</label>
+                        <textarea id="attendeeNotes" placeholder="Any special notes or requirements"></textarea>
+                    </div>
+                    <button type="submit" class="btn success">Add Attendee</button>
+                </form>
+            </div>
+        </div>
+
+        <div>
+            <h3>Attendee List</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>AI Experience</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="attendeeTable">
+                    <tr>
+                        <td>John Smith</td>
+                        <td>john@email.com</td>
+                        <td>555-0123</td>
+                        <td>Beginner</td>
+                        <td><span class="text-success">Confirmed</span></td>
+                        <td>
+                            <button class="btn danger" onclick="removeAttendee(this)">Remove</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Jane Doe</td>
+                        <td>jane@email.com</td>
+                        <td>555-0124</td>
+                        <td>None</td>
+                        <td><span class="text-success">Confirmed</span></td>
+                        <td>
+                            <button class="btn danger" onclick="removeAttendee(this)">Remove</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Budget Section -->
+    <div id="budget" class="section">
+        <div class="section-header">
+            <button class="back-btn" onclick="showDashboard()">← Back to Dashboard</button>
+            <h2>💰 Budget Tracker</h2>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <h3>Financial Summary</h3>
+                <div class="card">
+                    <p><strong>Total Revenue:</strong> $<span id="totalRevenue">1200</span></p>
+                    <p><strong>Total Expenses:</strong> $<span id="totalExpenses">850</span></p>
+                    <p><strong>Net Profit:</strong> <span class="text-success">$<span id="netProfit">350</span></span></p>
+                    <p><strong>Profit Margin:</strong> <span id="profitMargin">29%</span></p>
+                </div>
+
+                <h3>Break-even Analysis</h3>
+                <div class="card">
+                    <p><strong>Break-even Point:</strong> 17 attendees</p>
+                    <p><strong>Current Registrations:</strong> 24</p>
+                    <p><strong>Safety Buffer:</strong> 7 extra registrations</p>
+                </div>
+            </div>
+
+            <div>
+                <h3>Add Expense</h3>
+                <form id="expenseForm" onsubmit="addExpense(event)">
+                    <div class="form-group">
+                        <label>Category:</label>
+                        <select id="expenseCategory">
+                            <option>Venue</option>
+                            <option>Technology</option>
+                            <option>Materials</option>
+                            <option>Marketing</option>
+                            <option>Food & Beverages</option>
+                            <option>Personnel</option>
+                            <option>Miscellaneous</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <input type="text" id="expenseDescription" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount ($):</label>
+                        <input type="number" id="expenseAmount" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Vendor:</label>
+                        <input type="text" id="expenseVendor">
+                    </div>
+                    <div class="form-group">
+                        <label>Status:</label>
+                        <select id="expenseStatus">
+                            <option>Pending</option>
+                            <option>Paid</option>
+                            <option>Overdue</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn success">Add Expense</button>
+                </form>
+            </div>
+        </div>
+
+        <div>
+            <h3>Expense Breakdown</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Vendor</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="expenseTable">
+                    <tr>
+                        <td>Venue</td>
+                        <td>Library Conference Room</td>
+                        <td>$300</td>
+                        <td>City Library</td>
+                        <td><span class="text-success">Paid</span></td>
+                        <td><button class="btn danger" onclick="removeExpense(this)">Remove</button></td>
+                    </tr>
+                    <tr>
+                        <td>Technology</td>
+                        <td>AV Equipment Rental</td>
+                        <td>$200</td>
+                        <td>AV Rental Co</td>
+                        <td><span class="text-warning">Pending</span></td>
+                        <td><button class="btn danger" onclick="removeExpense(this)">Remove</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Content Section -->
+    <div id="content" class="section">
+        <div class="section-header">
+            <button class="back-btn" onclick="showDashboard()">← Back to Dashboard</button>
+            <h2>📚 Workshop Content & Materials</h2>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <h3>Learning Objectives</h3>
+                <div class="card">
+                    <ul>
+                        <li>Understand basic AI concepts and terminology</li>
+                        <li>Get hands-on experience with 2-3 AI tools</li>
+                        <li>Know how to apply AI in personal/professional context</li>
+                        <li>Feel confident exploring AI tools independently</li>
+                    </ul>
+                </div>
+
+                <h3>Core AI Tools to Cover</h3>
+                <div class="card">
+                    <ul class="checklist">
+                        <li><input type="checkbox" checked> ChatGPT - Text generation</li>
+                        <li><input type="checkbox" checked> Claude - AI assistant</li>
+                        <li><input type="checkbox"> DALL-E - Image generation</li>
+                        <li><input type="checkbox"> Canva AI - Design assistance</li>
+                        <li><input type="checkbox"> Grammarly - Writing assistance</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <h3>Hands-on Activities</h3>
+                <div class="card">
+                    <h4>Activity 1: AI Writing Assistant (20 min)</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Demo setup prepared</li>
+                        <li><input type="checkbox"> Sample prompts ready</li>
+                        <li><input type="checkbox"> Exercise options defined</li>
+                    </ul>
+
+                    <h4>Activity 2: Creative AI Tools (20 min)</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Image generation tool access</li>
+                        <li><input type="checkbox"> Prompt templates prepared</li>
+                        <li><input type="checkbox"> Examples ready to show</li>
+                    </ul>
+
+                    <h4>Activity 3: Problem-Solving (15 min)</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Challenge framework prepared</li>
+                        <li><input type="checkbox"> Real-world examples ready</li>
+                        <li><input type="checkbox"> Debrief questions prepared</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3>Discussion Prompts & Resources</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>Opening Questions</h4>
+                    <ul>
+                        <li>"Who has used AI tools before? What was your experience?"</li>
+                        <li>"What hopes or concerns do you have about AI?"</li>
+                        <li>"Where do you see AI being most useful in your life/work?"</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Resources to Share</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> AI tools handout prepared</li>
+                        <li><input type="checkbox"> Best practices guide ready</li>
+                        <li><input type="checkbox"> Learning resources compiled</li>
+                        <li><input type="checkbox"> Community groups listed</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Marketing Section -->
+    <div id="marketing" class="section">
+        <div class="section-header">
+            <button class="back-btn" onclick="showDashboard()">← Back to Dashboard</button>
+            <h2>📢 Marketing Campaign Management</h2>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <h3>Campaign Performance</h3>
+                <div class="card">
+                    <p><strong>Total Reach:</strong> 2,450 people</p>
+                    <p><strong>Registrations:</strong> 24 (0.98% conversion)</p>
+                    <p><strong>Cost per Registration:</strong> $4.17</p>
+                    <p><strong>Campaign Budget:</strong> $100</p>
+                </div>
+
+                <h3>Channel Performance</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Channel</th>
+                            <th>Reach</th>
+                            <th>Clicks</th>
+                            <th>Conversions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Facebook</td>
+                            <td>1,200</td>
+                            <td>180</td>
+                            <td>12</td>
+                        </tr>
+                        <tr>
+                            <td>LinkedIn</td>
+                            <td>800</td>
+                            <td>120</td>
+                            <td>8</td>
+                        </tr>
+                        <tr>
+                            <td>Email List</td>
+                            <td>300</td>
+                            <td>90</td>
+                            <td>3</td>
+                        </tr>
+                        <tr>
+                            <td>Word-of-mouth</td>
+                            <td>150</td>
+                            <td>-</td>
+                            <td>1</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                <h3>Marketing Timeline</h3>
+                <ul class="checklist">
+                    <li><input type="checkbox" checked> Week 1: Launch announcement</li>
+                    <li><input type="checkbox" checked> Week 2: Social media push</li>
+                    <li><input type="checkbox"> This week: Final reminders</li>
+                    <li><input type="checkbox"> Day-of: Live updates</li>
+                </ul>
+
+                <h3>Content Library Status</h3>
+                <div class="card">
+                    <h4>📱 Social Media Posts</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox" checked> LinkedIn post</li>
+                        <li><input type="checkbox" checked> Facebook event</li>
+                        <li><input type="checkbox" checked> Instagram stories</li>
+                    </ul>
+
+                    <h4>📧 Email Templates</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox" checked> Launch email</li>
+                        <li><input type="checkbox" checked> Reminder email</li>
+                        <li><input type="checkbox"> Follow-up email</li>
+                    </ul>
+
+                    <h4>🖨️ Print Materials</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox" checked> Flyers (50 printed)</li>
+                        <li><input type="checkbox"> Business cards</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3>Partnership Status</h3>
+            <div class="grid-3">
+                <div class="card">
+                    <h4>✅ Confirmed Partners</h4>
+                    <ul>
+                        <li>City Library (Hosting)</li>
+                        <li>Local Tech Meetup (Promotion)</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>⏳ Pending</h4>
+                    <ul>
+                        <li>Chamber of Commerce</li>
+                        <li>Community College</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>💡 Next Event Ideas</h4>
+                    <ul>
+                        <li>Coffee shop flyer placement</li>
+                        <li>Professional networking groups</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resources Section -->
+    <div id="resources" class="section">
+        <div class="section-header">
+            <button class="back-btn" onclick="showDashboard()">← Back to Dashboard</button>
+            <h2>🎯 Resources & Materials Management</h2>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <h3>Technology Requirements</h3>
+                <div class="card">
+                    <h4>Audio/Visual Equipment</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox" checked> Projector or large display</li>
+                        <li><input type="checkbox" checked> HDMI/USB-C cables</li>
+                        <li><input type="checkbox"> Extension cords and power strips</li>
+                        <li><input type="checkbox"> Microphone system</li>
+                        <li><input type="checkbox"> Backup devices</li>
+                    </ul>
+
+                    <h4>Internet & Digital Setup</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox" checked> WiFi network tested</li>
+                        <li><input type="checkbox" checked> Guest access setup</li>
+                        <li><input type="checkbox" checked> AI tool accounts ready</li>
+                        <li><input type="checkbox"> Backup internet (hotspot)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <h3>Physical Materials</h3>
+                <div class="card">
+                    <h4>Stationery & Supplies</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Name tags and markers</li>
+                        <li><input type="checkbox"> Notebooks/notepads</li>
+                        <li><input type="checkbox"> Pens/pencils</li>
+                        <li><input type="checkbox"> Sticky notes</li>
+                        <li><input type="checkbox"> Sign-in sheet</li>
+                    </ul>
+
+                    <h4>Printed Materials</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox" checked> Workshop agenda (30 copies)</li>
+                        <li><input type="checkbox" checked> Resource handout</li>
+                        <li><input type="checkbox"> Feedback forms</li>
+                        <li><input type="checkbox"> Contact information cards</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3>Room Setup & Logistics</h3>
+            <div class="grid-3">
+                <div class="card">
+                    <h4>Furniture Arrangement</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Seating arrangement planned</li>
+                        <li><input type="checkbox"> Tables for laptops</li>
+                        <li><input type="checkbox"> Presentation area clear</li>
+                        <li><input type="checkbox"> Registration table ready</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Environmental</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox" checked> Room temperature comfortable</li>
+                        <li><input type="checkbox" checked> Lighting adequate</li>
+                        <li><input type="checkbox"> Ventilation checked</li>
+                        <li><input type="checkbox"> Noise levels manageable</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Emergency Backup</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox" checked> Offline activities prepared</li>
+                        <li><input type="checkbox"> Printed AI examples</li>
+                        <li><input type="checkbox" checked> Technical support contact</li>
+                        <li><input type="checkbox"> Venue emergency contact</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3>Setup Timeline</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>Day Before (if possible)</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Room setup completed</li>
+                        <li><input type="checkbox"> Technology testing done</li>
+                        <li><input type="checkbox"> Materials staging organized</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Day Of - Setup (2 hours before)</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Final room arrangement</li>
+                        <li><input type="checkbox"> Technology final check</li>
+                        <li><input type="checkbox"> Materials distribution</li>
+                        <li><input type="checkbox"> Registration area prepared</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Follow-up Section -->
+    <div id="followup" class="section">
+        <div class="section-header">
+            <button class="back-btn" onclick="showDashboard()">← Back to Dashboard</button>
+            <h2>📧 Follow-up System</h2>
+        </div>
+
+        <div class="grid-2">
+            <div>
+                <h3>Follow-up Timeline</h3>
+                <div class="card">
+                    <h4>Immediate (24 hours)</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Thank you email sent</li>
+                        <li><input type="checkbox"> Resources shared</li>
+                        <li><input type="checkbox"> Feedback survey sent</li>
+                    </ul>
+
+                    <h4>One Week Follow-up</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Check-in email</li>
+                        <li><input type="checkbox"> AI tips shared</li>
+                        <li><input type="checkbox"> Support offered</li>
+                    </ul>
+
+                    <h4>One Month Follow-up</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Progress review</li>
+                        <li><input type="checkbox"> Next steps recommendations</li>
+                        <li><input type="checkbox"> Advanced workshop promotion</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <h3>Feedback Collection</h3>
+                <div class="card">
+                    <h4>Survey Questions</h4>
+                    <ol>
+                        <li>Overall workshop value (1-5 scale)</li>
+                        <li>Most useful part of workshop</li>
+                        <li>What could have been better</li>
+                        <li>Confidence using AI tools now</li>
+                        <li>Would you recommend to others</li>
+                        <li>Additional AI topics of interest</li>
+                    </ol>
+                </div>
+
+                <h3>Success Metrics</h3>
+                <div class="card">
+                    <h4>Immediate (Week 1)</h4>
+                    <ul>
+                        <li>Email open rate: <input type="number" value="85" style="width: 60px;">%</li>
+                        <li>Survey completion: <input type="number" value="70" style="width: 60px;">%</li>
+                        <li>Resource clicks: <input type="number" value="40" style="width: 60px;">%</li>
+                    </ul>
+
+                    <h4>Long-term (3+ months)</h4>
+                    <ul>
+                        <li>Testimonials collected: <input type="number" value="5" style="width: 60px;"></li>
+                        <li>Referrals generated: <input type="number" value="8" style="width: 60px;"></li>
+                        <li>Advanced workshop interest: <input type="number" value="12" style="width: 60px;"></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3>Community Building</h3>
+            <div class="grid-3">
+                <div class="card">
+                    <h4>Alumni Group</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Discord server created</li>
+                        <li><input type="checkbox"> Welcome message prepared</li>
+                        <li><input type="checkbox"> Monthly meetup planned</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Content Series</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Weekly AI tips planned</li>
+                        <li><input type="checkbox"> Success story templates</li>
+                        <li><input type="checkbox"> Resource updates scheduled</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>Future Workshops</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox"> Advanced AI workshop planned</li>
+                        <li><input type="checkbox"> Industry-specific sessions</li>
+                        <li><input type="checkbox"> Online follow-up sessions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3>Email Templates</h3>
+            <div class="grid-2">
+                <div class="card">
+                    <h4>Thank You Email Template</h4>
+                    <textarea rows="8" placeholder="Thank you for joining Project Just-Learn! Here are the resources we discussed..." style="width: 100%;"></textarea>
+                    <button class="btn">Save Template</button>
+                </div>
+                <div class="card">
+                    <h4>Follow-up Check-in Template</h4>
+                    <textarea rows="8" placeholder="How's your AI exploration going? I've been curious about..." style="width: 100%;"></textarea>
+                    <button class="btn">Save Template</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Management
+        let eventData = JSON.parse(localStorage.getItem('eventData')) || {
+            attendees: [],
+            expenses: [],
+            checklist: {}
+        };
+
+        // Navigation Functions
+        function showSection(sectionId) {
+            document.getElementById('dashboard').style.display = 'none';
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        function showDashboard() {
+            document.getElementById('dashboard').style.display = 'block';
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            updateDashboardStats();
+        }
+
+        // Data Persistence
+        function saveData() {
+            localStorage.setItem('eventData', JSON.stringify(eventData));
+        }
+
+        // Attendee Management
+        function addAttendee(event) {
+            event.preventDefault();
+            
+            const attendee = {
+                name: document.getElementById('attendeeName').value,
+                email: document.getElementById('attendeeEmail').value,
+                phone: document.getElementById('attendeePhone').value,
+                experience: document.getElementById('attendeeExperience').value,
+                dietary: document.getElementById('attendeeDietary').value,
+                notes: document.getElementById('attendeeNotes').value,
+                status: 'Confirmed'
+            };
+
+            eventData.attendees.push(attendee);
+            
+            const table = document.getElementById('attendeeTable');
+            const row = table.insertRow();
+            row.innerHTML = `
+                <td>${attendee.name}</td>
+                <td>${attendee.email}</td>
+                <td>${attendee.phone}</td>
+                <td>${attendee.experience}</td>
+                <td><span class="text-success">${attendee.status}</span></td>
+                <td><button class="btn danger" onclick="removeAttendee(this)">Remove</button></td>
+            `;
+
+            document.getElementById('attendeeForm').reset();
+            saveData();
+            updateDashboardStats();
+        }
+
+        function removeAttendee(button) {
+            if (confirm('Are you sure you want to remove this attendee?')) {
+                button.closest('tr').remove();
+                updateDashboardStats();
+            }
+        }
+
+        // Budget Management
+        function addExpense(event) {
+            event.preventDefault();
+            
+            const expense = {
+                category: document.getElementById('expenseCategory').value,
+                description: document.getElementById('expenseDescription').value,
+                amount: parseFloat(document.getElementById('expenseAmount').value),
+                vendor: document.getElementById('expenseVendor').value,
+                status: document.getElementById('expenseStatus').value
+            };
+
+            eventData.expenses.push(expense);
+            
+            const table = document.getElementById('expenseTable');
+            const row = table.insertRow();
+            
+            const statusClass = expense.status === 'Paid' ? 'text-success' : 
+                              expense.status === 'Overdue' ? 'text-danger' : 'text-warning';
+            
+            row.innerHTML = `
+                <td>${expense.category}</td>
+                <td>${expense.description}</td>
+                <td>$${expense.amount}</td>
+                <td>${expense.vendor}</td>
+                <td><span class="${statusClass}">${expense.status}</span></td>
+                <td><button class="btn danger" onclick="removeExpense(this)">Remove</button></td>
+            `;
+
+            document.getElementById('expenseForm').reset();
+            saveData();
+            updateBudgetSummary();
+            updateDashboardStats();
+        }
+
+        function removeExpense(button) {
+            if (confirm('Are you sure you want to remove this expense?')) {
+                button.closest('tr').remove();
+                updateBudgetSummary();
+                updateDashboardStats();
+            }
+        }
+
+        function updateBudgetSummary() {
+            const expenseRows = document.getElementById('expenseTable').querySelectorAll('tr');
+            let totalExpenses = 0;
+            
+            expenseRows.forEach(row => {
+                const amountText = row.cells[2]?.textContent;
+                if (amountText) {
+                    totalExpenses += parseFloat(amountText.replace('$', '')) || 0;
+                }
+            });
+
+            const totalRevenue = 1200; // This should be calculated from attendees
+            const netProfit = totalRevenue - totalExpenses;
+            const margin = ((netProfit / totalRevenue) * 100).toFixed(1);
+
+            document.getElementById('totalExpenses').textContent = totalExpenses.toFixed(0);
+            document.getElementById('netProfit').textContent = netProfit.toFixed(0);
+            document.getElementById('profitMargin').textContent = margin + '%';
+        }
+
+        // Progress Tracking
+        function updateProgress() {
+            const checklists = document.querySelectorAll('.checklist');
+            let totalItems = 0;
+            let completedItems = 0;
+
+            checklists.forEach(checklist => {
+                const checkboxes = checklist.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(checkbox => {
+                    totalItems++;
+                    if (checkbox.checked) completedItems++;
+                });
+            });
+
+            const progress = totalItems > 0 ? (completedItems / totalItems) * 100 : 0;
+            const progressBar = document.getElementById('checklistProgress');
+            if (progressBar) {
+                progressBar.style.width = progress + '%';
+            }
+
+            // Update dashboard
+            const taskProgress = document.getElementById('taskProgress');
+            if (taskProgress) {
+                taskProgress.textContent = `${completedItems}/${totalItems}`;
+            }
+
+            saveData();
+        }
+
+        // Dashboard Updates
+        function updateDashboardStats() {
+            // Update attendee count
+            const attendeeRows = document.getElementById('attendeeTable').querySelectorAll('tr').length;
+            document.getElementById('attendeeCount').textContent = attendeeRows;
+            document.getElementById('confirmedCount').textContent = attendeeRows;
+
+            // Update days until event
+            const eventDateInput = document.getElementById('eventDate');
+            if (eventDateInput && eventDateInput.value) {
+                const eventDate = new Date(eventDateInput.value);
+                const today = new Date();
+                const timeDiff = eventDate.getTime() - today.getTime();
+                const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                document.getElementById('daysUntil').textContent = daysDiff > 0 ? daysDiff : 0;
+            }
+        }
+
+        // Utility Functions
+        function sendReminders() {
+            alert('Reminder emails would be sent to all confirmed attendees.');
+        }
+
+        function exportAttendeeList() {
+            alert('Attendee list would be exported as CSV file.');
+        }
+
+        function addFromWaitlist() {
+            alert('Function to add attendees from waitlist.');
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDashboardStats();
+            updateProgress();
+            
+            // Set today's date as default for event date if empty
+            const eventDateInput = document.getElementById('eventDate');
+            if (eventDateInput && !eventDateInput.value) {
+                const today = new Date();
+                today.setDate(today.getDate() + 3); // Default to 3 days from now
+                eventDateInput.value = today.toISOString().split('T')[0];
+            }
+
+            // Load saved data
+            if (eventData.attendees) {
+                // Restore attendees if saved
+            }
+            
+            // Update all progress bars
+            updateProgress();
+        });
+
+        // Auto-save functionality
+        document.addEventListener('input', function(e) {
+            if (e.target.matches('input[type="date"], input[type="time"], input[type="number"], input[type="text"], textarea')) {
+                setTimeout(saveData, 500); // Save after 500ms delay
+            }
+        });
+
+        document.addEventListener('change', function(e) {
+            if (e.target.matches('input[type="checkbox"], select')) {
+                saveData();
+                updateProgress();
+            }
+        });
+    </script>
+</body>
+</html>
