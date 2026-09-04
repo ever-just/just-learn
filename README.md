@@ -1,3 +1,10 @@
+> ## ⛔️ ARCHIVED — not maintained
+>
+> This repository is read-only. It is kept for reference and history.
+> Just-Learn, an AI workshop management prototype (2025). Not maintained.
+>
+> Archived 2026-09-04.
+
 # Just-Learn: AI Workshop Management System
 
 ![EverJust Logo](./assets/everjust_logo.png)
